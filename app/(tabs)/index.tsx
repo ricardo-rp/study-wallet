@@ -41,7 +41,9 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
         <HeaderContainer>
           <WhiteText>Favorites: </WhiteText>
           {favorites.length === 0 ? (
-            <WhiteText>No favorites</WhiteText>
+            <WhiteText>
+              When you add tokens to your favorites, they will be seen here.
+            </WhiteText>
           ) : (
             favorites.map((fav) => <Token key={fav.id} {...fav} />)
           )}
