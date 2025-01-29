@@ -3,11 +3,15 @@ import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
 import { useFavorites } from "@/hooks/useFavorites";
+import { TokenInfo } from "@/types/domain";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
-  const { filteredTokens, isLoading, error } = useTokenSearch(searchQuery);
-  const { toggleFavorite, isFavorited } = useFavorites();
+  const {
+    data: [favorites, rest],
+    isLoading,
+    error,
+  } = useTokenSearch(searchQuery);
 
   if (isLoading) return <ActivityIndicator />;
   if (error) return <WhiteText>Error loading tokens</WhiteText>;
@@ -22,24 +26,35 @@ export default function HomeScreen() {
       />
 
       <FlatList
-        data={filteredTokens}
-        renderItem={({ item }) => (
-          <TokenItem>
-            <WhiteText>
-              {item.name} ({item.symbol})
-            </WhiteText>
+        data={favorites}
+        renderItem={({ item }) => <Token {...item} />}
+        keyExtractor={(item) => item.id}
+      />
 
-            <HeartButton onPress={() => toggleFavorite(item.id)}>
-              <HeartText>{isFavorited(item.id) ? "❤️" : "🤍"}</HeartText>
-            </HeartButton>
-          </TokenItem>
-        )}
+      <FlatList
+        data={rest}
+        renderItem={({ item }) => <Token {...item} />}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
       />
     </Container>
   );
 }
+
+const Token = ({ name, id, symbol }: TokenInfo) => {
+  const { toggleFavorite, isFavorited } = useFavorites();
+
+  return (
+    <TokenItem>
+      <WhiteText>{name}</WhiteText>
+      <WhiteText>({symbol})</WhiteText>
+
+      <HeartButton onPress={() => toggleFavorite(id)}>
+        <HeartText>{isFavorited(id) ? "❤️" : "🤍"}</HeartText>
+      </HeartButton>
+    </TokenItem>
+  );
+};
 
 // Updated styled components
 const TokenItem = styled.View`
