@@ -1,38 +1,63 @@
-import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FAVORITES_KEY = "favorites";
+const FAVORITES_QUERY_KEY = ["async-storage-favorites"];
+
+// Helper functions for AsyncStorage operations
+const fetchFavorites = async (): Promise<string[]> => {
+  const stored = await AsyncStorage.getItem(FAVORITES_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
+const persistFavorites = (favorites: string[]): Promise<void> =>
+  AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
 
 export const useFavorites = () => {
-  const [favoriteIds, setFavorites] = useState<string[]>([]);
+  const queryClient = useQueryClient();
 
-  // Load favorites on mount
-  useEffect(() => {
-    AsyncStorage.getItem(FAVORITES_KEY)
-      .then((stored) => stored !== null && setFavorites(JSON.parse(stored)))
-      .catch((e) => console.error("Failed to load favorites:", e));
-  }, []);
+  // Query for fetching favorites
+  const { data: favoriteIds = [] } = useQuery<string[]>({
+    queryKey: FAVORITES_QUERY_KEY,
+    queryFn: fetchFavorites,
+    // Disable background refetching since we're managing local storage
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
-  const toggleFavorite = useCallback(
-    (tokenId: string) => {
+  // Mutation for toggling favorites
+  const { mutate: toggleFavorite } = useMutation({
+    mutationFn: async (tokenId: string) => {
       const updatedFavorites = favoriteIds.includes(tokenId)
         ? favoriteIds.filter((id) => id !== tokenId)
         : [...favoriteIds, tokenId];
 
-      setFavorites(updatedFavorites);
-      AsyncStorage.setItem(
-        FAVORITES_KEY,
-        JSON.stringify(updatedFavorites)
-      ).catch((error) => console.error("Failed to toggle favorite:", error));
+      await persistFavorites(updatedFavorites);
+      return updatedFavorites;
     },
-    [favoriteIds]
-  );
+    onMutate: async (tokenId: string) => {
+      // Optimistic update
+      const newFavorites = favoriteIds.includes(tokenId)
+        ? favoriteIds.filter((id) => id !== tokenId)
+        : [...favoriteIds, tokenId];
+
+      queryClient.setQueryData(FAVORITES_QUERY_KEY, newFavorites);
+      return { favoriteIds }; // pass as context so it can be reverted on error
+    },
+    onError: (err, _, context) => {
+      // Rollback on error
+      queryClient.setQueryData(FAVORITES_QUERY_KEY, context?.favoriteIds);
+      console.error("Failed to toggle favorite:", err);
+    },
+  });
 
   // Check if a token is favorited
-  const isFavorited = useCallback(
-    (tokenId: string) => favoriteIds.includes(tokenId),
-    [favoriteIds]
-  );
+  const isFavorited = (tokenId: string) => favoriteIds.includes(tokenId);
 
-  return { favoriteIds, toggleFavorite, isFavorited };
+  return {
+    favoriteIds,
+    toggleFavorite,
+    isFavorited,
+  };
 };
