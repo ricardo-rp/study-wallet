@@ -48,7 +48,7 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
           )}
         </SectionHeader>
       )}
-      stickySectionHeadersEnabled={false}
+      stickySectionHeadersEnabled
     />
   );
 };
