@@ -2,13 +2,14 @@ import { ActivityIndicator, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const { filteredTokens, isLoading, error } = useTokenSearch(searchQuery);
+  const { toggleFavorite, isFavorited } = useFavorites();
 
   if (isLoading) return <ActivityIndicator />;
-
   if (error) return <WhiteText>Error loading tokens</WhiteText>;
 
   return (
@@ -23,9 +24,15 @@ export default function HomeScreen() {
       <FlatList
         data={filteredTokens}
         renderItem={({ item }) => (
-          <WhiteText>
-            {item.name} ({item.symbol})
-          </WhiteText>
+          <TokenItem>
+            <WhiteText>
+              {item.name} ({item.symbol})
+            </WhiteText>
+
+            <HeartButton onPress={() => toggleFavorite(item.id)}>
+              <HeartText>{isFavorited(item.id) ? "❤️" : "🤍"}</HeartText>
+            </HeartButton>
+          </TokenItem>
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
@@ -34,7 +41,22 @@ export default function HomeScreen() {
   );
 }
 
-// Styled components remain the same
+// Updated styled components
+const TokenItem = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+`;
+
+const HeartButton = styled.TouchableOpacity`
+  padding: 8px;
+`;
+
+const HeartText = styled.Text`
+  font-size: 24px;
+`;
+
 const SearchInput = styled.TextInput`
   padding: 12px;
   margin: 16px;
@@ -45,7 +67,6 @@ const SearchInput = styled.TextInput`
 
 const WhiteText = styled.Text`
   color: white;
-  padding: 12px;
 `;
 
 const Container = styled.View`
