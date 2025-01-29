@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const FAVORITES_KEY = "favorites";
 
 export const useFavorites = () => {
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favoriteIds, setFavorites] = useState<string[]>([]);
 
   // Load favorites on mount
   useEffect(() => {
@@ -15,9 +15,9 @@ export const useFavorites = () => {
 
   const toggleFavorite = useCallback(
     (tokenId: string) => {
-      const updatedFavorites = favorites.includes(tokenId)
-        ? favorites.filter((id) => id !== tokenId)
-        : [...favorites, tokenId];
+      const updatedFavorites = favoriteIds.includes(tokenId)
+        ? favoriteIds.filter((id) => id !== tokenId)
+        : [...favoriteIds, tokenId];
 
       setFavorites(updatedFavorites);
       AsyncStorage.setItem(
@@ -25,14 +25,14 @@ export const useFavorites = () => {
         JSON.stringify(updatedFavorites)
       ).catch((error) => console.error("Failed to toggle favorite:", error));
     },
-    [favorites]
+    [favoriteIds]
   );
 
   // Check if a token is favorited
   const isFavorited = useCallback(
-    (tokenId: string) => favorites.includes(tokenId),
-    [favorites]
+    (tokenId: string) => favoriteIds.includes(tokenId),
+    [favoriteIds]
   );
 
-  return { favorites, toggleFavorite, isFavorited };
+  return { favoriteIds, toggleFavorite, isFavorited };
 };
