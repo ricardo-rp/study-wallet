@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList } from "react-native";
+import { ActivityIndicator, SectionList } from "react-native";
 import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
@@ -33,23 +33,22 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
   if (error) return <WhiteText>Error loading tokens</WhiteText>;
 
   return (
-    <FlatList
-      data={rest}
-      renderItem={({ item }) => <Token {...item} />}
+    <SectionList
+      sections={[
+        { title: "Favorites", data: favorites },
+        { title: "Results", data: rest },
+      ]}
       keyExtractor={(item) => item.id}
-      ListHeaderComponent={
-        <HeaderContainer>
-          <WhiteText>Favorites: </WhiteText>
-          {favorites.length === 0 ? (
-            <WhiteText>
-              When you add tokens to your favorites, they will be seen here.
-            </WhiteText>
-          ) : (
-            favorites.map((fav) => <Token key={fav.id} {...fav} />)
+      renderItem={({ item }) => <Token {...item} />}
+      renderSectionHeader={({ section }) => (
+        <SectionHeader>
+          <SectionTitle>{section.title}</SectionTitle>
+          {section.data.length === 0 && (
+            <WhiteText>No {section.title.toLowerCase()}</WhiteText>
           )}
-        </HeaderContainer>
-      }
-      ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
+        </SectionHeader>
+      )}
+      stickySectionHeadersEnabled={false}
     />
   );
 };
@@ -59,8 +58,11 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
 
   return (
     <TokenItem>
-      <WhiteText>{name}</WhiteText>
-      <WhiteText>({symbol})</WhiteText>
+      <Column>
+        <WhiteText>{name}</WhiteText>
+        <SymbolText>({symbol})</SymbolText>
+      </Column>
+
       <HeartButton onPress={() => toggleFavorite(id)}>
         <HeartText>{isFavorited(id) ? "❤️" : "🤍"}</HeartText>
       </HeartButton>
@@ -68,11 +70,18 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
   );
 };
 
-const HeaderContainer = styled.View`
-  /* Some optional styling to separate favorites from the rest list */
-  padding: 12px 16px;
+// Styled components
+const SectionHeader = styled.View`
+  padding: 16px;
+  background-color: #1a1a1a;
   border-bottom-width: 1px;
-  border-bottom-color: #444;
+  border-bottom-color: #333;
+`;
+
+const SectionTitle = styled.Text`
+  color: #888;
+  font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 const TokenItem = styled.View`
@@ -80,6 +89,16 @@ const TokenItem = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
+  background-color: #000;
+`;
+
+const Column = styled.View`
+  flex-direction: column;
+`;
+
+const SymbolText = styled.Text`
+  color: #666;
+  font-size: 12px;
 `;
 
 const HeartButton = styled.TouchableOpacity`
