@@ -1,29 +1,15 @@
 import { ActivityIndicator, FlatList } from "react-native";
-import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 import styled from "styled-components/native";
-import type { TokenInfo } from "@/types/domain";
-import { useState, useMemo, useDeferredValue } from "react";
+import { useState } from "react";
+import { useTokenSearch } from "@/hooks/useTokenSearch";
 
 export default function HomeScreen() {
-  const { data: tokenList, isLoading } =
-    useCoinGeckoApi<TokenInfo[]>("/coins/list");
   const [searchQuery, setSearchQuery] = useState("");
-  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const { filteredTokens, isLoading, error } = useTokenSearch(searchQuery);
 
-  const filteredTokens = useMemo(() => {
-    if (!tokenList) return [];
+  if (isLoading) return <ActivityIndicator />;
 
-    const trimmedQuery = deferredSearchQuery.trim();
-    if (!trimmedQuery) return tokenList;
-
-    return tokenList.filter(({ name, symbol, id }) =>
-      [name.toLowerCase(), symbol.toLowerCase(), id.toLowerCase()].includes(
-        trimmedQuery
-      )
-    );
-  }, [tokenList, deferredSearchQuery]);
-
-  if (isLoading || !tokenList) return <ActivityIndicator />;
+  if (error) return <WhiteText>Error loading tokens</WhiteText>;
 
   return (
     <Container>
@@ -48,6 +34,7 @@ export default function HomeScreen() {
   );
 }
 
+// Styled components remain the same
 const SearchInput = styled.TextInput`
   padding: 12px;
   margin: 16px;
