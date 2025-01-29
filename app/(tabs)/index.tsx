@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import { useEffect } from "react";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 
+import styled from "styled-components/native";
+
 export default function HomeScreen() {
   const { data: btcData } = useCoinGeckoApi("coins/bitcoin");
   const { data: ethData } = useCoinGeckoApi("coins/tether");
@@ -14,7 +16,11 @@ export default function HomeScreen() {
 
   return (
     <View>
-      <Text>Hi!</Text>
+      <WhiteText>hi!</WhiteText>
     </View>
   );
 }
+
+const WhiteText = styled.Text`
+  color: white;
+`;
