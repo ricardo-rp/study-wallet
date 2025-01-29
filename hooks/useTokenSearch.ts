@@ -1,47 +1,59 @@
-import { useDeferredValue, useMemo } from "react";
+import { useMemo } from "react";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 import type { TokenInfo } from "@/types/domain";
 import { useFavorites } from "./useFavorites";
+import { useDebounce } from "./useDebounce";
 
-export const useTokenSearch = (searchQuery: string) => {
-  const { data, isLoading, error } =
-    useCoinGeckoApi<TokenInfo[]>("/coins/list");
+export const useTokenSearch = (query: string) => {
+  const [debouncedQuery] = useDebounce(query.trim(), 300);
 
-  const deferredQuery = useDeferredValue(searchQuery);
+  // Always fetch complete list for favorites
+  const {
+    data: allTokens,
+    isLoading: allLoading,
+    error: allError,
+  } = useCoinGeckoApi<TokenInfo[]>({ route: "/coins/list" });
 
-  const filteredTokens = useMemo(() => {
-    if (!data) return [];
+  // Conditional search API call
+  const {
+    data: searchResults,
+    isLoading: searchLoading,
+    error: searchError,
+  } = useCoinGeckoApi<{ coins: TokenInfo[] }>(
+    debouncedQuery
+      ? { route: `/search?query=${debouncedQuery}` }
+      : { enabled: false }
+  );
 
-    return filterTokens(data, deferredQuery);
-  }, [data, deferredQuery]);
+  const { favoriteIds: favorites } = useFavorites();
 
-  const { favorites } = useFavorites();
-  const [favoritedElements, rest] = useMemo(() => {
-    const favorited: TokenInfo[] = [];
-    const rest: TokenInfo[] = [];
+  // All favorites
+  const [favoritedElements, allNonFavorites] = useMemo(() => {
+    if (!allTokens) return [[], []];
 
-    for (const token of filteredTokens) {
-      if (favorites.includes(token.id)) favorited.push(token);
-      else rest.push(token);
+    const favoritedElements = [];
+    const allNonFavorites = [];
+
+    for (const token of allTokens) {
+      if (favorites.includes(token.id)) favoritedElements.push(token);
+      else allNonFavorites.push(token);
     }
 
-    return [favorited, rest];
-  }, [filteredTokens, favorites]);
+    return [favoritedElements, allNonFavorites];
+  }, [allTokens, favorites]);
+
+  // Search results (excluding favorites)
+  const searchResultsElements = useMemo(() => {
+    if (!searchResults) return [];
+    return searchResults.coins.filter((token) => !favorites.includes(token.id));
+  }, [searchResults, favorites]);
 
   return {
-    data: [favoritedElements, rest],
-    isLoading,
-    error,
+    data: [
+      favoritedElements,
+      debouncedQuery ? searchResultsElements : allNonFavorites,
+    ],
+    isLoading: allLoading || searchLoading,
+    error: allError || searchError,
   } as const;
-};
-
-const filterTokens = (tokens: TokenInfo[], query: string): TokenInfo[] => {
-  const lowerQuery = query.trim().toLowerCase();
-  if (!lowerQuery) return tokens;
-
-  return tokens.filter((token) =>
-    [token.name, token.symbol, token.id]
-      .map((field) => field.toLowerCase())
-      .some((field) => field.includes(lowerQuery))
-  );
 };

@@ -7,14 +7,6 @@ import { TokenInfo } from "@/types/domain";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
-  const {
-    data: [favorites, rest],
-    isLoading,
-    error,
-  } = useTokenSearch(searchQuery);
-
-  if (isLoading) return <ActivityIndicator />;
-  if (error) return <WhiteText>Error loading tokens</WhiteText>;
 
   return (
     <Container>
@@ -25,24 +17,40 @@ export default function HomeScreen() {
         onChangeText={setSearchQuery}
       />
 
-      <FlatList
-        data={rest}
-        renderItem={({ item }) => <Token {...item} />}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          <HeaderContainer>
-            {favorites.length === 0 ? (
-              <WhiteText>No favorites</WhiteText>
-            ) : (
-              favorites.map((fav) => <Token key={fav.id} {...fav} />)
-            )}
-          </HeaderContainer>
-        }
-        ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
-      />
+      <TokensLoader searchQuery={searchQuery} />
     </Container>
   );
 }
+
+const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
+  const {
+    data: [favorites, rest],
+    isLoading,
+    error,
+  } = useTokenSearch(searchQuery);
+
+  if (isLoading) return <ActivityIndicator />;
+  if (error) return <WhiteText>Error loading tokens</WhiteText>;
+
+  return (
+    <FlatList
+      data={rest}
+      renderItem={({ item }) => <Token {...item} />}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={
+        <HeaderContainer>
+          <WhiteText>Favorites: </WhiteText>
+          {favorites.length === 0 ? (
+            <WhiteText>No favorites</WhiteText>
+          ) : (
+            favorites.map((fav) => <Token key={fav.id} {...fav} />)
+          )}
+        </HeaderContainer>
+      }
+      ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
+    />
+  );
+};
 
 const Token = ({ name, id, symbol }: TokenInfo) => {
   const { toggleFavorite, isFavorited } = useFavorites();
