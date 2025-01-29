@@ -1,22 +1,24 @@
-import { View, Text } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
-import { useEffect } from "react";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 
 import styled from "styled-components/native";
+import type { TokenInfo } from "@/types/domain";
 
 export default function HomeScreen() {
-  const { data: btcData } = useCoinGeckoApi("coins/bitcoin");
-  const { data: ethData } = useCoinGeckoApi("coins/tether");
-  const { data: usdData } = useCoinGeckoApi("coins/ethereum");
+  const { data, isLoading } = useCoinGeckoApi<TokenInfo[]>("/coins/list");
 
-  useEffect(() => {
-    console.log({ btcData, ethData, usdData });
-  }, [btcData, ethData, usdData]);
+  if (isLoading || !data) return <ActivityIndicator />;
+
+  const tokenList = data.filter((token) =>
+    ["bitcoin", "tether", "ethereum"].includes(token.id)
+  );
 
   return (
     <View>
-      <WhiteText>hi!</WhiteText>
+      {tokenList.map((token) => (
+        <WhiteText key={token.id}>{token.name}</WhiteText>
+      ))}
     </View>
   );
 }
