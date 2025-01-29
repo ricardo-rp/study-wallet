@@ -26,15 +26,18 @@ export default function HomeScreen() {
       />
 
       <FlatList
-        data={favorites}
-        renderItem={({ item }) => <Token {...item} />}
-        keyExtractor={(item) => item.id}
-      />
-
-      <FlatList
         data={rest}
         renderItem={({ item }) => <Token {...item} />}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <HeaderContainer>
+            {favorites.length === 0 ? (
+              <WhiteText>No favorites</WhiteText>
+            ) : (
+              favorites.map((fav) => <Token key={fav.id} {...fav} />)
+            )}
+          </HeaderContainer>
+        }
         ListEmptyComponent={<WhiteText>No tokens found</WhiteText>}
       />
     </Container>
@@ -48,7 +51,6 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
     <TokenItem>
       <WhiteText>{name}</WhiteText>
       <WhiteText>({symbol})</WhiteText>
-
       <HeartButton onPress={() => toggleFavorite(id)}>
         <HeartText>{isFavorited(id) ? "❤️" : "🤍"}</HeartText>
       </HeartButton>
@@ -56,7 +58,13 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
   );
 };
 
-// Updated styled components
+const HeaderContainer = styled.View`
+  /* Some optional styling to separate favorites from the rest list */
+  padding: 12px 16px;
+  border-bottom-width: 1px;
+  border-bottom-color: #444;
+`;
+
 const TokenItem = styled.View`
   flex-direction: row;
   justify-content: space-between;
