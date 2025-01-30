@@ -7,7 +7,9 @@ type TokenInfo = {
 };
 
 type TokenDetails = TokenInfo & {
+  image: { large: string; small: string; thumb: string };
   market_data: {
+    current_price: PriceObject;
     market_cap: PriceObject;
     high_24h: PriceObject;
     low_24h: PriceObject;

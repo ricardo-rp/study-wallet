@@ -1,4 +1,4 @@
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Image } from "react-native";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 import type { TokenDetails } from "@/types/domain";
 import { useLocalSearchParams } from "expo-router";
@@ -13,43 +13,50 @@ export default function TokenDetailsScreen() {
   if (isLoading || !data) return <ActivityIndicator />;
   if (error) return <ErrorText>Error loading token details</ErrorText>;
 
+  const { current_price, high_24h, low_24h, ath, atl, market_cap } =
+    data.market_data;
+
   return (
     <Container>
       <Header>
-        <Title>{data.name}</Title>
-        <Symbol>{data.symbol.toUpperCase()}</Symbol>
+        <ImageContainer>
+          <TokenImage source={{ uri: data.image.large }} resizeMode="contain" />
+        </ImageContainer>
+
+        <TitleContainer>
+          <Title>{data.name}</Title>
+          <Symbol>{data.symbol.toUpperCase()}</Symbol>
+        </TitleContainer>
       </Header>
 
       <DetailsContainer>
         <Section>
-          <SectionTitle>Market Data</SectionTitle>
+          <SectionTitle>Price Information</SectionTitle>
           <PriceRow>
-            <Label>Market Cap</Label>
-            <Value>{formatCurrency(data.market_data.market_cap.usd)}</Value>
+            <Label>Current Price</Label>
+            <Text>{formatCurrency(current_price.usd)}</Text>
           </PriceRow>
-        </Section>
 
-        <Section>
-          <SectionTitle>Price Ranges</SectionTitle>
           <PriceRow>
-            <Label>24h High</Label>
-            <Value>{formatCurrency(data.market_data.high_24h.usd)}</Value>
+            <Label>24h Range</Label>
+            <Text>
+              {formatCurrency(high_24h.usd)} - {formatCurrency(low_24h.usd)}
+            </Text>
           </PriceRow>
-          <PriceRow>
-            <Label>24h Low</Label>
-            <Value>{formatCurrency(data.market_data.low_24h.usd)}</Value>
-          </PriceRow>
-        </Section>
 
-        <Section>
-          <SectionTitle>Historical</SectionTitle>
           <PriceRow>
             <Label>All-Time High</Label>
-            <Value>{formatCurrency(data.market_data.ath.usd)}</Value>
+            <Text>{formatCurrency(ath.usd)}</Text>
           </PriceRow>
+
           <PriceRow>
             <Label>All-Time Low</Label>
-            <Value>{formatCurrency(data.market_data.atl.usd)}</Value>
+            <Text>{formatCurrency(atl.usd)}</Text>
+          </PriceRow>
+
+          <PriceRow>
+            <Label>Market Cap</Label>
+            <Text>{formatCurrency(market_cap.usd)}</Text>
           </PriceRow>
         </Section>
       </DetailsContainer>
@@ -58,24 +65,13 @@ export default function TokenDetailsScreen() {
 }
 
 // Helper function to format currency values
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
   }).format(value);
-};
-
-// Helper function to format large numbers
-const formatCurrencyAbbreviation = (value: number) => {
-  const formatter = Intl.NumberFormat("en", {
-    notation: "compact",
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  });
-  return formatter.format(value);
-};
 
 // Styled components
 const Container = styled.View`
@@ -85,7 +81,25 @@ const Container = styled.View`
 `;
 
 const Header = styled.View`
+  flex-direction: row;
+  align-items: center;
   margin-bottom: 24px;
+  gap: 16px;
+`;
+
+const ImageContainer = styled.View`
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 8px;
+`;
+
+const TokenImage = styled(Image)`
+  width: 64px;
+  height: 64px;
+`;
+
+const TitleContainer = styled.View`
+  flex: 1;
 `;
 
 const Title = styled.Text`
@@ -127,7 +141,7 @@ const Label = styled.Text`
   font-size: 16px;
 `;
 
-const Value = styled.Text`
+const Text = styled.Text`
   color: #fff;
   font-size: 16px;
   font-weight: 500;
