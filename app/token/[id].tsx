@@ -24,8 +24,11 @@ export default function TokenDetailsScreen() {
         </ImageContainer>
 
         <TitleContainer>
-          <Title>{data.name}</Title>
-          <Symbol>{data.symbol.toUpperCase()}</Symbol>
+          <TitleGroup>
+            <Title>{data.name}</Title>
+            <Symbol>{data.symbol.toUpperCase()}</Symbol>
+          </TitleGroup>
+          <PriceText>{formatCurrency(current_price.usd)}</PriceText>
         </TitleContainer>
       </Header>
 
@@ -33,14 +36,9 @@ export default function TokenDetailsScreen() {
         <Section>
           <SectionTitle>Price Information</SectionTitle>
           <PriceRow>
-            <Label>Current Price</Label>
-            <Text>{formatCurrency(current_price.usd)}</Text>
-          </PriceRow>
-
-          <PriceRow>
             <Label>24h Range</Label>
             <Text>
-              {formatCurrency(high_24h.usd)} - {formatCurrency(low_24h.usd)}
+              {formatCurrency(low_24h.usd)} - {formatCurrency(high_24h.usd)}
             </Text>
           </PriceRow>
 
@@ -100,6 +98,13 @@ const TokenImage = styled(Image)`
 
 const TitleContainer = styled.View`
   flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const TitleGroup = styled.View`
+  gap: 4px;
 `;
 
 const Title = styled.Text`
@@ -111,6 +116,12 @@ const Title = styled.Text`
 const Symbol = styled.Text`
   color: #888;
   font-size: 20px;
+`;
+
+const PriceText = styled.Text`
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
 `;
 
 const DetailsContainer = styled.View`
