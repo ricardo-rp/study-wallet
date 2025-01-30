@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
 import { useFavorites } from "@/hooks/useFavorites";
 import { TokenInfo } from "@/types/domain";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,10 +59,12 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
 
   return (
     <TokenItem>
-      <Column>
-        <WhiteText>{name}</WhiteText>
-        <SymbolText>({symbol})</SymbolText>
-      </Column>
+      <Link href={`/token/${id}`}>
+        <Column>
+          <WhiteText>{name}</WhiteText>
+          <SymbolText>({symbol})</SymbolText>
+        </Column>
+      </Link>
 
       <HeartButton onPress={() => toggleFavorite(id)}>
         <HeartText>{isFavorited(id) ? "❤️" : "🤍"}</HeartText>
