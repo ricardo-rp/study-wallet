@@ -1,10 +1,11 @@
 import { ActivityIndicator, Image } from "react-native";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import styled from "styled-components/native";
 import { formatCurrency } from "@/utils";
 import { Colors } from "@/constants/Colors";
 import { useFavoriteIds } from "@/hooks/useFavoriteIds";
+import { useLayoutEffect } from "react";
 
 export type { TokenDetails };
 
@@ -36,6 +37,21 @@ export default function TokenDetailsScreen() {
 
   const { toggleFavorite, isFavorited } = useFavoriteIds();
 
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "",
+      headerStyle: { backgroundColor: Colors.red },
+      headerTintColor: Colors.white,
+      headerRight: () => (
+        <HeaderHeartButton onPress={() => toggleFavorite(id)}>
+          {isFavorited(id) ? "❤️" : "🤍"}
+        </HeaderHeartButton>
+      ),
+    });
+  }, [navigation, isFavorited(id)]);
+
   if (isLoading || !data) return <ActivityIndicator />;
   if (error) return <ErrorText>Error loading token details</ErrorText>;
 
@@ -45,17 +61,10 @@ export default function TokenDetailsScreen() {
   return (
     <Container>
       <Header>
-        <ImageContainer>
-          <TokenImage source={{ uri: data.image.large }} resizeMode="contain" />
-        </ImageContainer>
+        <TokenImage source={{ uri: data.image.large }} resizeMode="contain" />
 
-        <TitleContainer>
-          <TitleGroup>
-            <Title>{data.name}</Title>
-            <Symbol>{data.symbol.toUpperCase()}</Symbol>
-          </TitleGroup>
-          <PriceText>{formatCurrency(current_price.usd)}</PriceText>
-        </TitleContainer>
+        <HeaderText>{data.symbol.toUpperCase()}</HeaderText>
+        <HeaderText>{formatCurrency(current_price.usd)}</HeaderText>
       </Header>
 
       <DetailsContainer>
@@ -83,10 +92,6 @@ export default function TokenDetailsScreen() {
             <Text>{formatCurrency(market_cap.usd)}</Text>
           </PriceRow>
         </Section>
-
-        <HeartButton onPress={() => toggleFavorite(id)}>
-          {isFavorited(id) ? "❤️" : "🤍"}
-        </HeartButton>
       </DetailsContainer>
     </Container>
   );
@@ -95,51 +100,29 @@ export default function TokenDetailsScreen() {
 // Styled components
 const Container = styled.View`
   flex: 1;
-  padding: 16px;
   background: ${Colors.white};
 `;
 
 const Header = styled.View`
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
-  gap: 16px;
-`;
-
-const ImageContainer = styled.View`
-  border-radius: 8px;
-  padding: 8px;
+  margin-bottom: 38px;
+  background: ${Colors.red};
+  border-radius: 0 0 36px 36px;
+  padding: 0 0 20px;
 `;
 
 const TokenImage = styled(Image)`
-  width: 64px;
-  height: 64px;
+  border-radius: 999px;
+  width: 72px;
+  height: 72px;
 `;
 
-const TitleContainer = styled.View`
-  flex: 1;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TitleGroup = styled.View`
-  gap: 4px;
-`;
-
-const Title = styled.Text`
-  font-size: 28px;
-  font-weight: bold;
-`;
-
-const Symbol = styled.Text`
-  color: #888;
-  font-size: 20px;
-`;
-
-const PriceText = styled.Text`
+const HeaderText = styled.Text`
+  color: ${Colors.white};
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 700;
+  line-height: 34px;
 `;
 
 const DetailsContainer = styled.View`
@@ -173,13 +156,15 @@ const Text = styled.Text`
 `;
 
 const ErrorText = styled.Text`
-  color: red;
+  color: ${Colors.red}
   font-size: 16px;
   text-align: center;
   margin-top: 20px;
 `;
 
-const HeartButton = styled.TouchableOpacity`
-  padding: 8px;
+const HeaderHeartButton = styled.TouchableOpacity`
+  padding: 16px;
+  margin-right: 8px;
   font-size: 24px;
+  border-radius: 999px;
 `;
