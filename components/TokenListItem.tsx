@@ -78,4 +78,5 @@ const WhiteText = styled.Text`
 const TokenImage = styled(Image)`
   width: 40px;
   height: 40px;
+  border-radius: 999px;
 `;
