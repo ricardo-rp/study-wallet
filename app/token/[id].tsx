@@ -5,12 +5,15 @@ import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import { formatCurrency } from "@/utils";
 import { Colors } from "@/constants/Colors";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function TokenDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data, isLoading, error } = useCoinGeckoApi<TokenDetails>({
     route: `/coins/${id}`,
   });
+
+  const { toggleFavorite, isFavorited } = useFavorites();
 
   if (isLoading || !data) return <ActivityIndicator />;
   if (error) return <ErrorText>Error loading token details</ErrorText>;
@@ -59,6 +62,10 @@ export default function TokenDetailsScreen() {
             <Text>{formatCurrency(market_cap.usd)}</Text>
           </PriceRow>
         </Section>
+
+        <HeartButton onPress={() => toggleFavorite(id)}>
+          {isFavorited(id) ? "❤️" : "🤍"}
+        </HeartButton>
       </DetailsContainer>
     </Container>
   );
@@ -149,4 +156,9 @@ const ErrorText = styled.Text`
   font-size: 16px;
   text-align: center;
   margin-top: 20px;
+`;
+
+const HeartButton = styled.TouchableOpacity`
+  padding: 8px;
+  font-size: 24px;
 `;

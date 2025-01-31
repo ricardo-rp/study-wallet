@@ -1,6 +1,5 @@
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
-import { useFavorites } from "@/hooks/useFavorites";
 import { TokenInfo } from "@/types/domain";
 import { Link } from "expo-router";
 import { formatCurrency } from "@/utils";
@@ -15,29 +14,21 @@ const TokenListItem = ({
   current_price,
   image,
   index,
-}: TokenInfo & { index: number }) => {
-  const { toggleFavorite, isFavorited } = useFavorites();
+}: TokenInfo & { index: number }) => (
+  <TokenItem index={index}>
+    <Link href={`/token/${id}`} asChild>
+      <PressableRow>
+        <StyledView>
+          <TokenImage source={{ uri: image }} resizeMode="contain" />
 
-  return (
-    <TokenItem index={index}>
-      <Link href={`/token/${id}`} asChild>
-        <PressableRow>
-          <StyledView>
-            <TokenImage source={{ uri: image }} resizeMode="contain" />
+          <Bold>{symbol.toUpperCase()}</Bold>
+        </StyledView>
 
-            <Bold>{symbol.toUpperCase()}</Bold>
-          </StyledView>
-
-          <PriceText>≈ {formatCurrency(current_price)}</PriceText>
-        </PressableRow>
-      </Link>
-
-      <HeartButton onPress={() => toggleFavorite(id)}>
-        {isFavorited(id) ? "❤️" : "🤍"}
-      </HeartButton>
-    </TokenItem>
-  );
-};
+        <PriceText>≈ {formatCurrency(current_price)}</PriceText>
+      </PressableRow>
+    </Link>
+  </TokenItem>
+);
 
 const StyledView = styled.View`
   flex-direction: row;
@@ -64,11 +55,6 @@ const TokenItem = styled(View)`
   padding: 12px ${Gutter - 4}px;
   background-color: ${({ index }: { index: number }) =>
     index % 2 === 0 ? Colors.lightGrey : Colors.white};
-`;
-
-const HeartButton = styled.TouchableOpacity`
-  padding: 8px;
-  font-size: 24px;
 `;
 
 const Bold = styled.Text`
