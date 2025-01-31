@@ -25,7 +25,7 @@ const TokenListItem = ({
           <StyledView>
             <TokenImage source={{ uri: image }} resizeMode="contain" />
 
-            <WhiteText>{symbol.toUpperCase()}</WhiteText>
+            <Bold>{symbol.toUpperCase()}</Bold>
           </StyledView>
 
           <PriceText>≈ {formatCurrency(current_price)}</PriceText>
@@ -71,7 +71,7 @@ const HeartButton = styled.TouchableOpacity`
   font-size: 24px;
 `;
 
-const WhiteText = styled.Text`
+const Bold = styled.Text`
   font-weight: bold;
 `;
 
