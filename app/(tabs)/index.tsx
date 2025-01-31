@@ -67,7 +67,7 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
       </Link>
 
       <HeartButton onPress={() => toggleFavorite(id)}>
-        <HeartText>{isFavorited(id) ? "❤️" : "🤍"}</HeartText>
+        {isFavorited(id) ? "❤️" : "🤍"}
       </HeartButton>
     </TokenItem>
   );
@@ -106,9 +106,6 @@ const SymbolText = styled.Text`
 
 const HeartButton = styled.TouchableOpacity`
   padding: 8px;
-`;
-
-const HeartText = styled.Text`
   font-size: 24px;
 `;
 
