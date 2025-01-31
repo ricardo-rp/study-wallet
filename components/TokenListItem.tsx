@@ -4,14 +4,22 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { TokenInfo } from "@/types/domain";
 import { Link } from "expo-router";
 import { formatCurrency } from "@/utils";
+import { Gutter } from "@/constants/Layout";
+import { Colors } from "@/constants/Colors";
 
 export { TokenListItem };
 
-const TokenListItem = ({ id, symbol, current_price, image }: TokenInfo) => {
+const TokenListItem = ({
+  id,
+  symbol,
+  current_price,
+  image,
+  index,
+}: TokenInfo & { index: number }) => {
   const { toggleFavorite, isFavorited } = useFavorites();
 
   return (
-    <TokenItem>
+    <TokenItem index={index}>
       <Link href={`/token/${id}`} asChild>
         <PressableRow>
           <StyledView>
@@ -49,11 +57,13 @@ const PriceText = styled.Text`
   margin-right: 16px;
 `;
 
-const TokenItem = styled.View`
+const TokenItem = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px ${Gutter - 4}px;
+  background-color: ${({ index }: { index: number }) =>
+    index % 2 === 0 ? Colors.lightGrey : Colors.white};
 `;
 
 const HeartButton = styled.TouchableOpacity`

@@ -3,6 +3,9 @@ import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
 import { TokenListItem } from "@/components/TokenListItem";
+import { Colors } from "@/constants/Colors";
+import { Span } from "@/components/ui/typography/Span";
+import { Gutter } from "@/constants/Layout";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,7 +13,7 @@ export default function HomeScreen() {
   return (
     <Container>
       <SearchInput
-        placeholder="Search tokens..."
+        placeholder="Search"
         placeholderTextColor="#888"
         value={searchQuery}
         onChangeText={setSearchQuery}
@@ -29,51 +32,50 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
   } = useTokenSearch(searchQuery);
 
   if (isLoading) return <ActivityIndicator />;
-  if (error) return <WhiteText>Error loading tokens</WhiteText>;
+  if (error) return <Span>Error loading tokens</Span>;
+
+  const sections = [
+    { title: "Bookmarks", data: favorites },
+    { title: "Results", data: rest },
+  ];
 
   return (
     <SectionList
-      sections={[
-        { title: "Favorites", data: favorites },
-        { title: "Results", data: rest },
-      ]}
+      sections={sections}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <TokenListItem {...item} />}
+      renderItem={({ item, index }) => (
+        <TokenListItem index={index} {...item} />
+      )}
       renderSectionHeader={({ section }) => (
-        <SectionHeader>
-          <SectionTitle>{section.title}</SectionTitle>
-          {section.data.length === 0 && (
-            <WhiteText>No {section.title.toLowerCase()}</WhiteText>
-          )}
-        </SectionHeader>
+        <SectionTitle>{section.title}</SectionTitle>
       )}
       stickySectionHeadersEnabled
     />
   );
 };
 
-const SectionHeader = styled.View`
-  padding: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: #333;
-`;
-
 const SectionTitle = styled.Text`
-  color: #888;
-  font-weight: bold;
+  color: ${Colors.darkBlue};
+
   margin-bottom: 8px;
+  padding: 12px ${Gutter}px;
+  background: white;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
 `;
 
 const SearchInput = styled.TextInput`
-  padding: 12px;
-  margin: 16px;
-  border-radius: 8px;
-`;
-
-const WhiteText = styled.Text`
-  font-weight: bold;
+  padding: 16px;
+  margin: ${Gutter - 8}px;
+  fontsize: 13px;
+  border-radius: 999px;
+  background: ${Colors.lightGrey};
+  border: solid rgba(41, 45, 50, 0.1);
 `;
 
 const Container = styled.View`
   flex: 1;
+  background: ${Colors.white};
 `;
