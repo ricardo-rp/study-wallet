@@ -5,6 +5,7 @@ import { useTokenSearch } from "@/hooks/useTokenSearch";
 import { useFavorites } from "@/hooks/useFavorites";
 import { TokenInfo } from "@/types/domain";
 import { Link } from "expo-router";
+import { formatCurrency } from "@/utils";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
