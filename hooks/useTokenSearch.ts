@@ -1,5 +1,5 @@
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
-import { useDebounce } from "./useDebounce";
+import { useDeferredValue } from "react";
 import { TokenMarketsResult } from "./useTokenMarkets";
 
 type TokenSearchResult = {
@@ -13,13 +13,13 @@ export const useTokenSearch = (
   query: string,
   cachedTokens: TokenMarketsResult[],
 ) => {
-  const [debouncedQuery] = useDebounce(query.trim(), 300);
+  const deferredQuery = useDeferredValue(query);
 
   const { data: searchResults, ...rest } = useCoinGeckoApi<{
     coins: TokenSearchResult[];
   }>(
-    debouncedQuery
-      ? { route: `/search?query=${debouncedQuery}` }
+    deferredQuery.trim() !== ""
+      ? { route: `/search?query=${deferredQuery}` }
       : { enabled: false },
   );
 
