@@ -3,6 +3,7 @@ import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 import type { TokenDetails } from "@/types/domain";
 import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
+import { formatCurrency } from "@/utils";
 
 export default function TokenDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -61,15 +62,6 @@ export default function TokenDetailsScreen() {
     </Container>
   );
 }
-
-// Helper function to format currency values
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 0,
-  }).format(value);
 
 // Styled components
 const Container = styled.View`

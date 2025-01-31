@@ -54,16 +54,20 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
   );
 };
 
-const Token = ({ name, id, symbol }: TokenInfo) => {
+const Token = ({ name, id, symbol, current_price }: TokenInfo) => {
   const { toggleFavorite, isFavorited } = useFavorites();
 
   return (
     <TokenItem>
-      <Link href={`/token/${id}`}>
-        <Column>
-          <WhiteText>{name}</WhiteText>
-          <SymbolText>({symbol})</SymbolText>
-        </Column>
+      <Link href={`/token/${id}`} asChild>
+        <PressableRow>
+          <Column>
+            <WhiteText>{name}</WhiteText>
+            <SymbolText>({symbol})</SymbolText>
+          </Column>
+
+          <PriceText>≈ {formatCurrency(current_price)}</PriceText>
+        </PressableRow>
       </Link>
 
       <HeartButton onPress={() => toggleFavorite(id)}>
@@ -73,7 +77,21 @@ const Token = ({ name, id, symbol }: TokenInfo) => {
   );
 };
 
-// Styled components
+// New styled components
+const PressableRow = styled.Pressable`
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const PriceText = styled.Text`
+  color: white;
+  font-size: 16px;
+  margin-right: 16px;
+`;
+
+// Existing styled components
 const SectionHeader = styled.View`
   padding: 16px;
   background-color: #1a1a1a;
