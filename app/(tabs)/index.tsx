@@ -63,8 +63,7 @@ const Token = ({ name, id, symbol, current_price }: TokenInfo) => {
       <Link href={`/token/${id}`} asChild>
         <PressableRow>
           <Column>
-            <WhiteText>{name}</WhiteText>
-            <SymbolText>({symbol})</SymbolText>
+            <WhiteText>{symbol.toUpperCase()}</WhiteText>
           </Column>
 
           <PriceText>≈ {formatCurrency(current_price)}</PriceText>
@@ -118,11 +117,6 @@ const Column = styled.View`
   flex-direction: column;
 `;
 
-const SymbolText = styled.Text`
-  color: #666;
-  font-size: 12px;
-`;
-
 const HeartButton = styled.TouchableOpacity`
   padding: 8px;
   font-size: 24px;
@@ -138,6 +132,7 @@ const SearchInput = styled.TextInput`
 
 const WhiteText = styled.Text`
   color: white;
+  font-weight: bold;
 `;
 
 const Container = styled.View`

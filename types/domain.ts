@@ -5,6 +5,7 @@ type TokenInfo = {
   symbol: string;
   name: string;
   current_price: number;
+  image: string;
 };
 
 type TokenDetails = {
