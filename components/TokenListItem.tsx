@@ -45,7 +45,6 @@ const PressableRow = styled.Pressable`
 `;
 
 const PriceText = styled.Text`
-  color: white;
   font-size: 16px;
   margin-right: 16px;
 `;
@@ -63,7 +62,6 @@ const HeartButton = styled.TouchableOpacity`
 `;
 
 const WhiteText = styled.Text`
-  color: white;
   font-weight: bold;
 `;
 

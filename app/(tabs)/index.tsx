@@ -54,7 +54,6 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
 
 const SectionHeader = styled.View`
   padding: 16px;
-  background-color: #1a1a1a;
   border-bottom-width: 1px;
   border-bottom-color: #333;
 `;
@@ -68,17 +67,13 @@ const SectionTitle = styled.Text`
 const SearchInput = styled.TextInput`
   padding: 12px;
   margin: 16px;
-  background-color: #333;
-  color: white;
   border-radius: 8px;
 `;
 
 const WhiteText = styled.Text`
-  color: white;
   font-weight: bold;
 `;
 
 const Container = styled.View`
   flex: 1;
-  background-color: #000;
 `;

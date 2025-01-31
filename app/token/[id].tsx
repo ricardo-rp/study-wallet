@@ -67,7 +67,6 @@ export default function TokenDetailsScreen() {
 const Container = styled.View`
   flex: 1;
   padding: 16px;
-  background-color: #000;
 `;
 
 const Header = styled.View`
@@ -78,7 +77,6 @@ const Header = styled.View`
 `;
 
 const ImageContainer = styled.View`
-  background-color: #1a1a1a;
   border-radius: 8px;
   padding: 8px;
 `;
@@ -100,7 +98,6 @@ const TitleGroup = styled.View`
 `;
 
 const Title = styled.Text`
-  color: white;
   font-size: 28px;
   font-weight: bold;
 `;
@@ -121,7 +118,6 @@ const DetailsContainer = styled.View`
 `;
 
 const Section = styled.View`
-  background-color: #1a1a1a;
   border-radius: 8px;
   padding: 16px;
 `;
