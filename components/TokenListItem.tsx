@@ -1,6 +1,5 @@
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
-import { TokenInfo } from "@/types/domain";
 import { Link } from "expo-router";
 import { formatCurrency } from "@/utils";
 import { Gutter } from "@/constants/Layout";
@@ -8,13 +7,22 @@ import { Colors } from "@/constants/Colors";
 
 export { TokenListItem };
 
+type TokenListItemProps = {
+  id: string;
+  symbol: string;
+  name: string;
+  current_price: number;
+  image: string;
+  index: number;
+};
+
 const TokenListItem = ({
   id,
   symbol,
   current_price,
   image,
   index,
-}: TokenInfo & { index: number }) => (
+}: TokenListItemProps) => (
   <TokenItem index={index}>
     <Link href={`/token/${id}`} asChild>
       <PressableRow>

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback } from "react";
 
 export { useFavoriteIds as useFavoriteIds };
 
@@ -55,7 +56,10 @@ const useFavoriteIds = () => {
   });
 
   // Check if a token is favorited
-  const isFavorited = (tokenId: string) => favoriteIds.includes(tokenId);
+  const isFavorited = useCallback(
+    (tokenId: string) => favoriteIds.includes(tokenId),
+    [favoriteIds],
+  );
 
   return {
     favoriteIds,

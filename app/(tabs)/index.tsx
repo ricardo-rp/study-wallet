@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image } from "react-native";
+import { ActivityIndicator, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";

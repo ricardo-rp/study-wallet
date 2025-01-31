@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+export { useCoinGeckoApi };
+
 const coinGeckoApi = `https://api.coingecko.com/api/v3`;
 
 const apiKey = process.env.EXPO_PUBLIC_X_CG_DEMO_API_KEY;
@@ -10,7 +12,7 @@ type UseCoinGeckoApiParams =
   | { route: string; enabled?: never }
   | { route?: never; enabled: false };
 
-export const useCoinGeckoApi = <T>({ route, enabled }: UseCoinGeckoApiParams) =>
+const useCoinGeckoApi = <T>({ route, enabled }: UseCoinGeckoApiParams) =>
   useQuery({
     queryKey: [route],
     queryFn: async () =>

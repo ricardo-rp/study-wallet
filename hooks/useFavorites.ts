@@ -1,14 +1,11 @@
 import { useMemo } from "react";
-import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
-import type { TokenInfo } from "@/types/domain";
 import { useFavoriteIds } from "./useFavoriteIds";
+import { useTokenMarkets } from "./useTokenMarkets";
 
 export { useFavorites };
 
 const useFavorites = () => {
-  const { data, isLoading, error } = useCoinGeckoApi<TokenInfo[]>({
-    route: "/coins/markets?vs_currency=usd",
-  });
+  const { data, isLoading, error } = useTokenMarkets();
 
   const { favoriteIds } = useFavoriteIds();
 

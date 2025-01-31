@@ -1,11 +1,32 @@
 import { ActivityIndicator, Image } from "react-native";
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
-import type { TokenDetails } from "@/types/domain";
 import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import { formatCurrency } from "@/utils";
 import { Colors } from "@/constants/Colors";
 import { useFavoriteIds } from "@/hooks/useFavoriteIds";
+
+export type { TokenDetails };
+
+type TokenDetails = {
+  id: string;
+  symbol: string;
+  name: string;
+  image: { large: string; small: string; thumb: string };
+  market_data: {
+    current_price: PriceObject;
+    market_cap: PriceObject;
+    high_24h: PriceObject;
+    low_24h: PriceObject;
+    ath: PriceObject;
+    atl: PriceObject;
+  };
+};
+
+/**
+ * Most "price"-related values from CoinGecko API come in this format.
+ */
+type PriceObject = { usd: number; btc: number; eur: number };
 
 export default function TokenDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
