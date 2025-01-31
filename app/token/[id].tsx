@@ -5,7 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import { formatCurrency } from "@/utils";
 import { Colors } from "@/constants/Colors";
-import { useFavorites } from "@/hooks/useFavorites";
+import { useFavoriteIds } from "@/hooks/useFavoriteIds";
 
 export default function TokenDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -13,7 +13,7 @@ export default function TokenDetailsScreen() {
     route: `/coins/${id}`,
   });
 
-  const { toggleFavorite, isFavorited } = useFavorites();
+  const { toggleFavorite, isFavorited } = useFavoriteIds();
 
   if (isLoading || !data) return <ActivityIndicator />;
   if (error) return <ErrorText>Error loading token details</ErrorText>;

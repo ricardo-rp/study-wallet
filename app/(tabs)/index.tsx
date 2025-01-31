@@ -1,4 +1,4 @@
-import { ActivityIndicator, SectionList, Image } from "react-native";
+import { ActivityIndicator, FlatList, Image } from "react-native";
 import styled from "styled-components/native";
 import { useState } from "react";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
@@ -6,9 +6,11 @@ import { TokenListItem } from "@/components/TokenListItem";
 import { Colors } from "@/constants/Colors";
 import { Span } from "@/components/ui/typography/Span";
 import { Gutter } from "@/constants/Layout";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
+  const hasSearchQuery = searchQuery.trim().length > 0;
 
   return (
     <Container>
@@ -19,57 +21,63 @@ export default function HomeScreen() {
         onChangeText={setSearchQuery}
       />
 
-      <TokensLoader searchQuery={searchQuery} />
+      {hasSearchQuery ? (
+        <SearchResults searchQuery={searchQuery} />
+      ) : (
+        <FavoritesList />
+      )}
     </Container>
   );
 }
 
-const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
-  const {
-    data: [favorites, rest],
-    isLoading,
-    error,
-  } = useTokenSearch(searchQuery);
+const FavoritesList = () => {
+  const { data, isLoading, error } = useFavorites();
 
   if (isLoading) return <ActivityIndicator />;
-  if (error) return <Span>Error loading tokens</Span>;
-
-  const sections = [
-    { title: "Bookmarks", data: favorites },
-    { title: "Results", data: rest },
-  ];
+  if (error) return <Span>Error loading favorites</Span>;
 
   return (
-    <SectionList
-      sections={sections}
+    <FlatList
+      data={data}
       keyExtractor={(item) => item.id}
       renderItem={({ item, index }) => (
         <TokenListItem index={index} {...item} />
       )}
-      renderSectionHeader={({ section }) => (
-        <SectionTitle>{section.title}</SectionTitle>
-      )}
-      stickySectionHeadersEnabled
+      ListEmptyComponent={
+        <EmptyMessage>No bookmarks yet. Search to add some!</EmptyMessage>
+      }
     />
   );
 };
 
-const SectionTitle = styled.Text`
-  color: ${Colors.darkBlue};
+const SearchResults = ({ searchQuery }: { searchQuery: string }) => {
+  const { data, isLoading, error } = useTokenSearch(searchQuery);
 
-  margin-bottom: 8px;
-  padding: 12px ${Gutter}px;
-  background: white;
+  if (isLoading) return <ActivityIndicator />;
+  if (error) return <Span>Error loading results</Span>;
 
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 28px;
+  return (
+    <FlatList
+      data={data?.coins}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item, index }) => (
+        <TokenListItem index={index} {...item} />
+      )}
+      ListEmptyComponent={<EmptyMessage>No results found</EmptyMessage>}
+    />
+  );
+};
+
+const EmptyMessage = styled(Span)`
+  padding: ${Gutter}px;
+  text-align: center;
 `;
 
+// Rest of your styled components remain the same
 const SearchInput = styled.TextInput`
   padding: 16px;
   margin: ${Gutter - 8}px;
-  fontsize: 13px;
+  font-size: 13px;
   border-radius: 999px;
   background: ${Colors.lightGrey};
   border: solid rgba(41, 45, 50, 0.1);
