@@ -13,13 +13,11 @@ export const useTokenSearch = (
   query: string,
   cachedTokens: TokenMarketsResult[],
 ) => {
-  const deferredQuery = useDeferredValue(query);
-
   const { data: searchResults, ...rest } = useCoinGeckoApi<{
     coins: TokenSearchResult[];
   }>(
-    deferredQuery.trim() !== ""
-      ? { route: `/search?query=${deferredQuery}` }
+    query.trim() !== ""
+      ? { route: `/search?query=${query}` }
       : { enabled: false },
   );
 

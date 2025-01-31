@@ -1,22 +1,21 @@
 import { ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
-import { useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { Span } from "@/components/ui/Typography";
 import { Gutter } from "@/constants/Layout";
 import { useTokenMarkets } from "@/hooks/useTokenMarkets";
 import { FavoritesList } from "@/components/home/FavoritesList";
 import { SearchResults } from "@/components/home/SearchResults";
+import { useDebounceValue } from "usehooks-ts";
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useDebounceValue("", 300);
 
   return (
     <Container>
       <SearchInput
         placeholder="Search"
         placeholderTextColor="#888"
-        value={searchQuery}
         onChangeText={setSearchQuery}
       />
 

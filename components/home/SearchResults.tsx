@@ -2,7 +2,7 @@ import { ActivityIndicator, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
 import { TokenListItem } from "@/components/TokenListItem";
-import { Span } from "@/components/ui/Typography";
+import { Headline4, Span } from "@/components/ui/Typography";
 import { Gutter } from "@/constants/Layout";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 
@@ -28,6 +28,7 @@ const SearchResults = ({
         <TokenListItem index={index} {...item} />
       )}
       ListEmptyComponent={<EmptyMessage>No tokens found</EmptyMessage>}
+      ListHeaderComponent={() => <Header>Results</Header>}
     />
   );
 };
@@ -35,4 +36,8 @@ const SearchResults = ({
 const EmptyMessage = styled(Span)`
   padding: ${Gutter}px;
   text-align: center;
+`;
+
+const Header = styled(Headline4)`
+  padding: 12px ${Gutter}px;
 `;
