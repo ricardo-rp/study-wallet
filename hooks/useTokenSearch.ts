@@ -12,7 +12,7 @@ export const useTokenSearch = (query: string) => {
     data: allTokens,
     isLoading: allLoading,
     error: allError,
-  } = useCoinGeckoApi<TokenInfo[]>({ route: "/coins/list" });
+  } = useCoinGeckoApi<TokenInfo[]>({ route: "/coins/markets?vs_currency=usd" });
 
   // Conditional search API call
   const {

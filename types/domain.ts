@@ -4,9 +4,13 @@ type TokenInfo = {
   id: string;
   symbol: string;
   name: string;
+  current_price: number;
 };
 
-type TokenDetails = TokenInfo & {
+type TokenDetails = {
+  id: string;
+  symbol: string;
+  name: string;
   image: { large: string; small: string; thumb: string };
   market_data: {
     current_price: PriceObject;
