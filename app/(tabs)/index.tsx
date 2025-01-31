@@ -55,16 +55,14 @@ const TokensLoader = ({ searchQuery }: { searchQuery: string }) => {
   );
 };
 
-const Token = ({ name, id, symbol, current_price }: TokenInfo) => {
+const Token = ({ id, symbol, current_price }: TokenInfo) => {
   const { toggleFavorite, isFavorited } = useFavorites();
 
   return (
     <TokenItem>
       <Link href={`/token/${id}`} asChild>
         <PressableRow>
-          <Column>
-            <WhiteText>{symbol.toUpperCase()}</WhiteText>
-          </Column>
+          <WhiteText>{symbol.toUpperCase()}</WhiteText>
 
           <PriceText>≈ {formatCurrency(current_price)}</PriceText>
         </PressableRow>
@@ -111,10 +109,6 @@ const TokenItem = styled.View`
   align-items: center;
   padding: 12px 16px;
   background-color: #000;
-`;
-
-const Column = styled.View`
-  flex-direction: column;
 `;
 
 const HeartButton = styled.TouchableOpacity`
