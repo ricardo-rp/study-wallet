@@ -7,10 +7,10 @@ import { Colors } from "@/constants/Colors";
 import { Span } from "@/components/ui/typography/Span";
 import { Gutter } from "@/constants/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
+import { TokenMarketsResult, useTokenMarkets } from "@/hooks/useTokenMarkets";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
-  const hasSearchQuery = searchQuery.trim().length > 0;
 
   return (
     <Container>
@@ -21,20 +21,31 @@ export default function HomeScreen() {
         onChangeText={setSearchQuery}
       />
 
-      {hasSearchQuery ? (
-        <SearchResults searchQuery={searchQuery} />
-      ) : (
-        <FavoritesList />
-      )}
+      <CachedTokensLoader searchQuery={searchQuery} />
     </Container>
   );
 }
 
-const FavoritesList = () => {
-  const { data, isLoading, error } = useFavorites();
+const CachedTokensLoader = ({ searchQuery }: { searchQuery: string }) => {
+  const { data, isLoading, error } = useTokenMarkets();
 
-  if (isLoading) return <ActivityIndicator />;
-  if (error) return <Span>Error loading favorites</Span>;
+  if (!data || isLoading) return null;
+
+  if (isLoading || !data) return <ActivityIndicator />;
+  if (error) return <Span>Error loading tokens</Span>;
+
+  if (searchQuery.trim().length === 0)
+    return <FavoritesList cachedTokens={data} />;
+
+  return <SearchResults searchQuery={searchQuery} cachedTokens={data} />;
+};
+
+const FavoritesList = ({
+  cachedTokens,
+}: {
+  cachedTokens: TokenMarketsResult[];
+}) => {
+  const { data } = useFavorites(cachedTokens);
 
   return (
     <FlatList
@@ -50,15 +61,21 @@ const FavoritesList = () => {
   );
 };
 
-const SearchResults = ({ searchQuery }: { searchQuery: string }) => {
-  const { data, isLoading, error } = useTokenSearch(searchQuery);
+const SearchResults = ({
+  searchQuery,
+  cachedTokens,
+}: {
+  searchQuery: string;
+  cachedTokens: TokenMarketsResult[];
+}) => {
+  const { data, isLoading, error } = useTokenSearch(searchQuery, cachedTokens);
 
   if (isLoading) return <ActivityIndicator />;
   if (error) return <Span>Error loading results</Span>;
 
   return (
     <FlatList
-      data={data?.coins}
+      data={data}
       keyExtractor={(item) => item.id}
       renderItem={({ item, index }) => (
         <TokenListItem index={index} {...item} />

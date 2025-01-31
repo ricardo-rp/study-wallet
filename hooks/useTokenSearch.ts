@@ -11,13 +11,25 @@ type TokenSearchResult = {
 
 export const useTokenSearch = (
   query: string,
-  wholeList: TokenMarketsResult,
+  cachedTokens: TokenMarketsResult[],
 ) => {
   const [debouncedQuery] = useDebounce(query.trim(), 300);
 
-  return useCoinGeckoApi<{ coins: TokenSearchResult[] }>(
+  const { data: searchResults, ...rest } = useCoinGeckoApi<{
+    coins: TokenSearchResult[];
+  }>(
     debouncedQuery
       ? { route: `/search?query=${debouncedQuery}` }
       : { enabled: false },
   );
+
+  const data = cachedTokens.filter((cachedToken) =>
+    searchResults === undefined
+      ? undefined
+      : searchResults.coins.some(
+          (resultToken) => resultToken.id === cachedToken.id,
+        ),
+  );
+
+  return { ...rest, data };
 };
