@@ -19,14 +19,10 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <ThemeProvider value={DefaultTheme}>
@@ -34,7 +30,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
-        </Stack>{" "}
+        </Stack>
       </QueryClientProvider>
       <StatusBar style="auto" />
     </ThemeProvider>

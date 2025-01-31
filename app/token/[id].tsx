@@ -4,6 +4,7 @@ import type { TokenDetails } from "@/types/domain";
 import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import { formatCurrency } from "@/utils";
+import { Colors } from "@/constants/Colors";
 
 export default function TokenDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -67,6 +68,7 @@ export default function TokenDetailsScreen() {
 const Container = styled.View`
   flex: 1;
   padding: 16px;
+  background: ${Colors.white};
 `;
 
 const Header = styled.View`
@@ -108,7 +110,6 @@ const Symbol = styled.Text`
 `;
 
 const PriceText = styled.Text`
-  color: #fff;
   font-size: 24px;
   font-weight: bold;
 `;
@@ -123,7 +124,6 @@ const Section = styled.View`
 `;
 
 const SectionTitle = styled.Text`
-  color: #fff;
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 12px;
@@ -136,12 +136,10 @@ const PriceRow = styled.View`
 `;
 
 const Label = styled.Text`
-  color: #888;
   font-size: 16px;
 `;
 
 const Text = styled.Text`
-  color: #fff;
   font-size: 16px;
   font-weight: 500;
 `;
