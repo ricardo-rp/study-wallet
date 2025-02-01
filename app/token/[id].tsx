@@ -9,8 +9,6 @@ import { useLayoutEffect } from "react";
 import { Gutter } from "@/constants/Layout";
 import { HeartIcon } from "react-native-heroicons/outline";
 
-export type { TokenDetails };
-
 type TokenDetails = {
   id: string;
   symbol: string;
