@@ -9,7 +9,7 @@ import { SearchResults } from "@/components/home/SearchResults";
 import { useDebounceValue } from "usehooks-ts";
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useDebounceValue("", 300);
+  const [searchQuery, setSearchQuery] = useDebounceValue("", 250);
 
   return (
     <Container>
