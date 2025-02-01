@@ -43,15 +43,6 @@ export default function TokenDetailsScreen() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "",
-      headerStyle: {
-        backgroundColor: Colors.red,
-        borderBottomWidth: 0, // Remove default border
-        shadowColor: "transparent", // Remove iOS shadow
-        elevation: 0, // Remove Android shadow
-      },
-      headerShadowVisible: false,
-      headerTintColor: Colors.white,
       headerRight: () => (
         <HeaderHeartButton onPress={() => toggleFavorite(id)}>
           <HeartIcon stroke="white" fill={isFavorited(id) ? "white" : "none"} />
