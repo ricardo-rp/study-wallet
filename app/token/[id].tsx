@@ -6,6 +6,8 @@ import { formatCurrency } from "@/utils";
 import { Colors } from "@/constants/Colors";
 import { useFavoriteIds } from "@/hooks/useFavoriteIds";
 import { useLayoutEffect } from "react";
+import { Gutter } from "@/constants/Layout";
+import { HeartIcon } from "react-native-heroicons/outline";
 
 export type { TokenDetails };
 
@@ -52,7 +54,7 @@ export default function TokenDetailsScreen() {
       headerTintColor: Colors.white,
       headerRight: () => (
         <HeaderHeartButton onPress={() => toggleFavorite(id)}>
-          {isFavorited(id) ? "❤️" : "🤍"}
+          <HeartIcon stroke="white" fill={isFavorited(id) ? "white" : "none"} />
         </HeaderHeartButton>
       ),
     });
@@ -64,41 +66,42 @@ export default function TokenDetailsScreen() {
   const { current_price, high_24h, low_24h, ath, atl, market_cap } =
     data.market_data;
 
+  const symbol = data.symbol.toUpperCase();
+
   return (
     <Container>
       <Header>
         <TokenImage source={{ uri: data.image.large }} resizeMode="contain" />
 
-        <HeaderText>{data.symbol.toUpperCase()}</HeaderText>
+        <HeaderText>{symbol}</HeaderText>
         <HeaderText>{formatCurrency(current_price.usd)}</HeaderText>
       </Header>
 
-      <DetailsContainer>
-        <Section>
-          <SectionTitle>Price Information</SectionTitle>
-          <PriceRow>
-            <Label>24h Range</Label>
-            <Text>
-              {formatCurrency(low_24h.usd)} - {formatCurrency(high_24h.usd)}
-            </Text>
-          </PriceRow>
+      <Section>
+        <SectionTitle>{symbol} historical price</SectionTitle>
 
-          <PriceRow>
-            <Label>All-Time High</Label>
-            <Text>{formatCurrency(ath.usd)}</Text>
-          </PriceRow>
+        <PriceRow darken>
+          <Label>Market Cap</Label>
+          <Text>{formatCurrency(market_cap.usd)}</Text>
+        </PriceRow>
 
-          <PriceRow>
-            <Label>All-Time Low</Label>
-            <Text>{formatCurrency(atl.usd)}</Text>
-          </PriceRow>
+        <PriceRow>
+          <Label>24h Range</Label>
+          <Text>
+            {formatCurrency(low_24h.usd)} - {formatCurrency(high_24h.usd)}
+          </Text>
+        </PriceRow>
 
-          <PriceRow>
-            <Label>Market Cap</Label>
-            <Text>{formatCurrency(market_cap.usd)}</Text>
-          </PriceRow>
-        </Section>
-      </DetailsContainer>
+        <PriceRow darken>
+          <Label>All-Time High</Label>
+          <Text>{formatCurrency(ath.usd)}</Text>
+        </PriceRow>
+
+        <PriceRow>
+          <Label>All-Time Low</Label>
+          <Text>{formatCurrency(atl.usd)}</Text>
+        </PriceRow>
+      </Section>
     </Container>
   );
 }
@@ -131,25 +134,22 @@ const HeaderText = styled.Text`
   line-height: 34px;
 `;
 
-const DetailsContainer = styled.View`
-  gap: 24px;
-`;
-
-const Section = styled.View`
-  border-radius: 8px;
-  padding: 16px;
-`;
+const Section = styled.View``;
 
 const SectionTitle = styled.Text`
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 12px;
+  padding-horizontal: ${Gutter + 9};
 `;
 
 const PriceRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-vertical: 8px;
+  padding-vertical: 24px;
+  padding-horizontal: ${Gutter};
+  background-color: ${({ darken }: { darken: boolean }) =>
+    darken ? Colors.lightGrey : Colors.white};
 `;
 
 const Label = styled.Text`
