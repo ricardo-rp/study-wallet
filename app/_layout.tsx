@@ -48,6 +48,7 @@ export default function RootLayout() {
                 title: "Exchange",
                 headerStyle: { backgroundColor: Colors.white },
                 headerTintColor: Colors.darkBlue,
+                headerTitleAlign: "center",
               }}
             />
             <Stack.Screen
