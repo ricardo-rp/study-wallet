@@ -49,6 +49,7 @@ export default function RootLayout() {
                 headerStyle: { backgroundColor: Colors.white },
                 headerTintColor: Colors.darkBlue,
                 headerTitleAlign: "center",
+                headerShadowVisible: false,
               }}
             />
             <Stack.Screen

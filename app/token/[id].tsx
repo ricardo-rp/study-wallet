@@ -129,14 +129,14 @@ const SectionTitle = styled.Text`
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 12px;
-  padding-horizontal: ${Gutter + 9};
+  padding-horizontal: ${Gutter + 9}px;
 `;
 
 const PriceRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding-vertical: 24px;
-  padding-horizontal: ${Gutter};
+  padding-horizontal: ${Gutter}px;
   background-color: ${({ darken }: { darken: boolean }) =>
     darken ? Colors.lightGrey : Colors.white};
 `;

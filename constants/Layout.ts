@@ -1,3 +1,3 @@
 export { Gutter };
 
-const Gutter = 33;
+const Gutter = 32;
