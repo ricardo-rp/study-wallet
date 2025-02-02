@@ -1,14 +1,14 @@
 import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
+import { Link, usePathname } from "expo-router";
 import { ArrowsRightLeftIcon } from "react-native-heroicons/outline";
 import styled from "styled-components/native";
 
 export { FloatingButton };
 
-const visible = true;
-
 const FloatingButton = () => {
-  if (!visible) return null;
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/exchange")) return null;
 
   return (
     <Link href="/exchange" asChild>
