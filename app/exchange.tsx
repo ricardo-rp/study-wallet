@@ -14,7 +14,7 @@ export default function ExchangeScreen() {
 
   return (
     <Container>
-      <TokenSelect defaultValue="bitcoin" />
+      <TokenSelect defaultValue={tokenId ?? "bitcoin"} />
       <TokenSelect defaultValue="tether" />
     </Container>
   );
