@@ -22,13 +22,7 @@ const TokenSelect = ({
 
   const currentToken = options.find((t) => t.id === selectedToken);
 
-  if (!currentToken)
-    return (
-      <InvalidView>
-        <InvalidText>Invalid token selected.</InvalidText>
-      </InvalidView>
-    );
-
+  if (!currentToken) return <InvalidText>Invalid token selected.</InvalidText>;
   return (
     <SelectWrapper>
       <GreyBox>
@@ -121,12 +115,9 @@ const TokenIcon = styled.Image`
   border-radius: 999px;
 `;
 
-const InvalidView = styled.View`
+const InvalidText = styled.Text`
   justify-content: center;
   align-items: center;
   flex: 1;
-`;
-
-const InvalidText = styled.Text`
   color: ${Colors.red};
 `;
