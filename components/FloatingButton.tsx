@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { Link, usePathname } from "expo-router";
+import { useEffect } from "react";
 import { ArrowsRightLeftIcon } from "react-native-heroicons/outline";
 import styled from "styled-components/native";
 
@@ -10,8 +11,14 @@ const FloatingButton = () => {
 
   if (pathname.startsWith("/exchange")) return null;
 
+  const href = (() => {
+    if (!pathname.startsWith("/token")) return "/exchange";
+    const tokenId = pathname.split("/")[2];
+    return `/exchange?tokenId=${tokenId}` as const;
+  })();
+
   return (
-    <Link href="/exchange" asChild>
+    <Link href={href} asChild>
       <Pressable>
         <ArrowsRightLeftIcon stroke="white" width={31} />
       </Pressable>
