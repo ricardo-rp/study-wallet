@@ -82,13 +82,11 @@ const GreyBox = styled.View`
   padding: 13px 16px;
 `;
 
-// A wrapper for both the Picker and the TextInput
 const InputsWrapper = styled.View`
   flex: 1;
   gap: 4px;
 `;
 
-// Restrict or style the Picker's size to prevent overflow
 const StyledPicker = styled(Picker)`
   width: 100%;
   border-radius: 4px;
@@ -100,7 +98,6 @@ const StyledPicker = styled(Picker)`
   padding: 0 4px;
 `;
 
-// Basic numeric input styling
 const AmountInput = styled.TextInput`
   width: 100%;
   padding: 0 4px;
