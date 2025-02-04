@@ -6,6 +6,12 @@ React context was not used extensively as there is little need for global state 
 
 Context is used extensively in the `/exchange` route to abstract complex logic away from the UI layer.
 
+Various OS-specific adaptations were made inside the `/exchange` route to accomodate for ios UI behaviour.
+
+React-query was used to facilitate data-fetching in most pages.
+
+Reducer pattern was used isntead of react query inside the `exchange` context for easier management of multiple synchronous state updates and complex behaviour.
+
 
 ## Running the project
 
