@@ -5,6 +5,7 @@ import { Gutter } from "@/constants/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 import { Headline4, Span } from "../ui/Typography";
+import { DmSans } from "@/constants/Fonts";
 
 export { FavoritesList };
 
@@ -36,8 +37,10 @@ const FavoritesList = ({
 const EmptyMessage = styled(Span)`
   padding: ${Gutter}px;
   text-align: center;
+  font-family: ${DmSans.regular};
 `;
 
 const Header = styled(Headline4)`
   padding: 12px ${Gutter}px;
+  font-family: ${DmSans.bold};
 `;

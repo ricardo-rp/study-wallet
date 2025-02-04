@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import { formatCurrency } from "@/utils";
 import { Gutter } from "@/constants/Layout";
 import { Colors } from "@/constants/Colors";
+import { DmSans } from "@/constants/Fonts";
 
 export { TokenListItem };
 
@@ -29,7 +30,7 @@ const TokenListItem = ({
         <StyledView>
           <TokenImage source={{ uri: image }} resizeMode="contain" />
 
-          <Bold>{symbol.toUpperCase()}</Bold>
+          <SymbolText>{symbol.toUpperCase()}</SymbolText>
         </StyledView>
 
         <PriceText>≈ {formatCurrency(current_price)}</PriceText>
@@ -52,8 +53,10 @@ const PressableRow = styled.Pressable`
 `;
 
 const PriceText = styled.Text`
-  font-size: 16px;
-  margin-right: 16px;
+  font-size: 15px;
+  margin-right: ${Gutter / 2};
+  font-family: ${DmSans.regular};
+  color: ${Colors.darkBlue};
 `;
 
 const TokenItem = styled(View)`
@@ -65,8 +68,9 @@ const TokenItem = styled(View)`
     index % 2 === 0 ? Colors.lightGrey : Colors.white};
 `;
 
-const Bold = styled.Text`
-  font-weight: bold;
+const SymbolText = styled.Text`
+  font-family: ${DmSans.bold};
+  font-size: 18px;
 `;
 
 const TokenImage = styled(Image)`
