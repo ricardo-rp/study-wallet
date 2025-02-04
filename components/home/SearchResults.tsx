@@ -1,7 +1,7 @@
 import { ActivityIndicator, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { useTokenSearch } from "@/hooks/useTokenSearch";
-import { TokenListItem } from "@/components/TokenListItem";
+import { TokenListItem } from "@/components/home/TokenListItem";
 import { Headline4, Span } from "@/components/ui/Typography";
 import { Gutter } from "@/constants/Layout";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";

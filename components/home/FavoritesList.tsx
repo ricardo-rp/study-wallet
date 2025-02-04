@@ -1,6 +1,6 @@
 import { FlatList } from "react-native";
 import styled from "styled-components/native";
-import { TokenListItem } from "@/components/TokenListItem";
+import { TokenListItem } from "@/components/home/TokenListItem";
 import { Gutter } from "@/constants/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
