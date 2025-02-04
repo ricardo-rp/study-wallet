@@ -61,7 +61,7 @@ const TokenSelect = ({
           "Loading..."
         ) : (
           <>
-            1 {currentToken?.symbol.toUpperCase()} ={" "}
+            1 {currentToken?.symbol.toUpperCase()} ≈{" "}
             <Text style={{ color: Colors.darkGreen }}>
               {formatCurrency(price)}
             </Text>
