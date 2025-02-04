@@ -54,7 +54,7 @@ const PressableRow = styled.Pressable`
 
 const PriceText = styled.Text`
   font-size: 15px;
-  margin-right: ${Gutter / 2};
+  margin-right: ${Gutter / 2}px;
   font-family: ${DmSans.regular};
   color: ${Colors.darkBlue};
 `;
