@@ -6,6 +6,8 @@ import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 
 import styled from "styled-components/native";
 import { DmSans, Quicksand } from "@/constants/Fonts";
+import { Platform } from "react-native";
+import { TokenPickerIos } from "./TokenPickerIos";
 
 export { TokenSelect };
 
@@ -39,14 +41,22 @@ const TokenSelect = ({
         <TokenIcon source={{ uri: currentToken?.image }} />
 
         <InputsWrapper>
-          <StyledPicker
-            selectedValue={selectedToken}
-            onValueChange={setSelectedToken}
-          >
-            {options.map(({ id, symbol }) => (
-              <Picker.Item key={id} label={symbol.toUpperCase()} value={id} />
-            ))}
-          </StyledPicker>
+          {Platform.OS === "ios" ? (
+            <TokenPickerIos
+              selectedToken={selectedToken}
+              setSelectedToken={setSelectedToken}
+              options={options}
+            />
+          ) : (
+            <StyledPicker
+              selectedValue={selectedToken}
+              onValueChange={setSelectedToken}
+            >
+              {options.map(({ id, symbol }) => (
+                <Picker.Item key={id} label={symbol.toUpperCase()} value={id} />
+              ))}
+            </StyledPicker>
+          )}
 
           <AmountInput
             keyboardType="numeric"
