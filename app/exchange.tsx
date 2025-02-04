@@ -1,40 +1,57 @@
-import { useState } from "react";
 import styled from "styled-components/native";
 import { useLocalSearchParams } from "expo-router";
 
 import { Gutter } from "@/constants/Layout";
 import { Colors } from "@/constants/Colors";
-import { useTokenMarkets } from "@/hooks/useTokenMarkets";
-import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
 import { TokenSelect } from "@/components/ui/TokenSelect";
+import {
+  ExchangeProvider,
+  useExchangeContext,
+} from "@/context/ExchangeContext";
 
 export default function ExchangeScreen() {
   const { tokenId } = useLocalSearchParams<{ tokenId?: string }>();
-  const [tokenA, setTokenA] = useState(tokenId ?? "bitcoin");
-  const [tokenB, setTokenB] = useState("tether");
-  const { data } = useTokenMarkets();
-  const {} = useCoinGeckoApi({ route: "/simple/price" });
+
+  return (
+    <ExchangeProvider defaultTokenAId={tokenId ?? "bitcoin"}>
+      <ExchangeUi />
+    </ExchangeProvider>
+  );
+}
+
+const ExchangeUi = () => {
+  const { dispatch, tokenA, tokenB } = useExchangeContext();
+
+  const setTokenA = (tokenAId: string) =>
+    dispatch({ type: "SET_TOKEN_A_ID", payload: { tokenAId } });
+  const setTokenAAmount = (newAmount: number) =>
+    dispatch({ type: "SET_TOKEN_A_AMOUNT", payload: { newAmount } });
+
+  const setTokenB = (tokenBId: string) =>
+    dispatch({ type: "SET_TOKEN_B_ID", payload: { tokenBId } });
+  const setTokenBAmount = (newAmount: number) =>
+    dispatch({ type: "SET_TOKEN_B_AMOUNT", payload: { newAmount } });
 
   return (
     <Container>
-      {data && (
-        <TokenSelect
-          selectedToken={tokenA}
-          setSelectedToken={setTokenA}
-          options={data}
-        />
-      )}
+      <TokenSelect
+        selectedToken={tokenA.id}
+        amount={tokenA.amount}
+        price={tokenA.price}
+        setSelectedToken={setTokenA}
+        setAmount={setTokenAAmount}
+      />
 
-      {data && (
-        <TokenSelect
-          selectedToken={tokenB}
-          setSelectedToken={setTokenB}
-          options={data}
-        />
-      )}
+      <TokenSelect
+        selectedToken={tokenB.id}
+        amount={tokenB.amount}
+        price={tokenB.price}
+        setSelectedToken={setTokenB}
+        setAmount={setTokenBAmount}
+      />
     </Container>
   );
-}
+};
 
 const Container = styled.View`
   flex: 1;

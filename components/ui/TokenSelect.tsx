@@ -1,28 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import styled from "styled-components/native";
 
 import { Colors } from "@/constants/Colors";
-import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 import { formatCurrency } from "@/utils";
+import { useExchangeContext } from "@/context/ExchangeContext";
 
 export { TokenSelect };
 
 const TokenSelect = ({
   selectedToken,
   setSelectedToken,
-  options,
+  amount,
+  setAmount,
+  price,
 }: {
   selectedToken: string;
   setSelectedToken: (x: string) => void;
-  options: TokenMarketsResult[];
+  amount: number;
+  setAmount: (x: number) => void;
+  price: "loading" | number;
 }) => {
-  const [amount, setAmount] = useState<string>("0");
+  const { marketsData } = useExchangeContext();
+
+  const options = marketsData === "loading" ? [] : marketsData;
 
   const currentToken = options.find((t) => t.id === selectedToken);
 
-  if (!currentToken) return <InvalidText>Invalid token selected.</InvalidText>;
+  if (!currentToken)
+    return (
+      <SelectWrapper>
+        <Loader />
+      </SelectWrapper>
+    );
+
   return (
     <SelectWrapper>
       <GreyBox>
@@ -31,31 +43,33 @@ const TokenSelect = ({
         <InputsWrapper>
           <StyledPicker
             selectedValue={selectedToken}
-            onValueChange={(itemValue: string) => setSelectedToken(itemValue)}
+            onValueChange={setSelectedToken}
           >
-            {options.map((token) => (
-              <Picker.Item
-                key={token.id}
-                label={token.symbol.toUpperCase()}
-                value={token.id}
-              />
+            {options.map(({ id, symbol }) => (
+              <Picker.Item key={id} label={symbol.toUpperCase()} value={id} />
             ))}
           </StyledPicker>
 
           <AmountInput
             keyboardType="numeric"
             value={amount}
-            onChangeText={(text: string) => setAmount(text)}
+            onChangeText={setAmount}
             placeholder="Amount"
           />
         </InputsWrapper>
       </GreyBox>
 
       <PriceText>
-        1 {currentToken.symbol.toUpperCase()} ={" "}
-        <Text style={{ color: Colors.darkGreen }}>
-          {formatCurrency(currentToken.current_price)}
-        </Text>
+        {price === "loading" ? (
+          "Loading..."
+        ) : (
+          <>
+            1 {currentToken.symbol.toUpperCase()} ={" "}
+            <Text style={{ color: Colors.darkGreen }}>
+              {formatCurrency(price)}
+            </Text>
+          </>
+        )}
       </PriceText>
     </SelectWrapper>
   );
@@ -112,9 +126,10 @@ const TokenIcon = styled.Image`
   border-radius: 999px;
 `;
 
-const InvalidText = styled.Text`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  color: ${Colors.red};
+const Loader = styled.View`
+  background-color: ${Colors.lightGrey};
+  border-radius: 12px;
+  padding: 13px 16px;
+  height: 72px;
+  width: 100%;
 `;
