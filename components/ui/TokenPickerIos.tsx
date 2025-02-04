@@ -1,7 +1,7 @@
 import { TouchableOpacity, Modal } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import styled from "styled-components/native";
 import { useState } from "react";
@@ -31,22 +31,24 @@ const TokenPickerIos: React.FC<TokenPickerIos> = ({
       </TouchableOpacity>
 
       <Modal visible={modalVisible} animationType="slide">
-        <SafeAreaView>
-          <ModalHeader>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <CloseText>Close</CloseText>
-            </TouchableOpacity>
-          </ModalHeader>
+        <SafeAreaProvider>
+          <SafeAreaView>
+            <ModalHeader>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <CloseText>Close</CloseText>
+              </TouchableOpacity>
+            </ModalHeader>
 
-          <Picker
-            selectedValue={selectedToken}
-            onValueChange={setSelectedToken}
-          >
-            {options.map(({ id, symbol }) => (
-              <Picker.Item key={id} label={symbol.toUpperCase()} value={id} />
-            ))}
-          </Picker>
-        </SafeAreaView>
+            <Picker
+              selectedValue={selectedToken}
+              onValueChange={setSelectedToken}
+            >
+              {options.map(({ id, symbol }) => (
+                <Picker.Item key={id} label={symbol.toUpperCase()} value={id} />
+              ))}
+            </Picker>
+          </SafeAreaView>
+        </SafeAreaProvider>
       </Modal>
     </>
   );
@@ -59,7 +61,10 @@ const TokenDisplay = styled.View`
   align-items: center;
 `;
 
-const TokenText = styled.Text`
+const TokenText = styled.Text.attrs({
+  numberOfLines: 1,
+  ellipsizeMode: "tail",
+})`
   font-size: 16px;
   color: ${Colors.darkGrey};
 `;
