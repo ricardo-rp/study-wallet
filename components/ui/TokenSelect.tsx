@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import styled from "styled-components/native";
-
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/utils";
-import { useExchangeContext } from "@/context/ExchangeContext";
+import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
+
+import styled from "styled-components/native";
 
 export { TokenSelect };
 
@@ -15,30 +14,28 @@ const TokenSelect = ({
   amount,
   setAmount,
   price,
+  options,
 }: {
   selectedToken: string;
   setSelectedToken: (x: string) => void;
   amount: number;
   setAmount: (x: number) => void;
   price: "loading" | number;
+  options: "loading" | TokenMarketsResult[];
 }) => {
-  const { marketsData } = useExchangeContext();
-
-  const options = marketsData === "loading" ? [] : marketsData;
-
-  const currentToken = options.find((t) => t.id === selectedToken);
-
-  if (!currentToken)
+  if (options === "loading")
     return (
       <SelectWrapper>
         <Loader />
       </SelectWrapper>
     );
 
+  const currentToken = options.find((t) => t.id === selectedToken);
+
   return (
     <SelectWrapper>
       <GreyBox>
-        <TokenIcon source={{ uri: currentToken.image }} />
+        <TokenIcon source={{ uri: currentToken?.image }} />
 
         <InputsWrapper>
           <StyledPicker
@@ -64,7 +61,7 @@ const TokenSelect = ({
           "Loading..."
         ) : (
           <>
-            1 {currentToken.symbol.toUpperCase()} ={" "}
+            1 {currentToken?.symbol.toUpperCase()} ={" "}
             <Text style={{ color: Colors.darkGreen }}>
               {formatCurrency(price)}
             </Text>

@@ -6,7 +6,6 @@ import React, {
   useReducer,
   useEffect,
   ReactNode,
-  Dispatch,
   useContext,
 } from "react";
 
@@ -30,11 +29,11 @@ const initialState: ExchangeState = {
 };
 
 type ExchangeAction =
-  | { type: "SET_TOKEN_A_ID"; payload: { tokenAId: string } }
-  | { type: "SET_TOKEN_B_ID"; payload: { tokenBId: string } }
-  | { type: "SET_PRICES"; payload: { tokenPrices: TokenPrices } }
+  | { type: "SET_TOKEN_A_ID"; payload: { newId: string } }
+  | { type: "SET_TOKEN_B_ID"; payload: { newId: string } }
   | { type: "SET_TOKEN_A_AMOUNT"; payload: { newAmount: number } }
-  | { type: "SET_TOKEN_B_AMOUNT"; payload: { newAmount: number } };
+  | { type: "SET_TOKEN_B_AMOUNT"; payload: { newAmount: number } }
+  | { type: "SET_PRICES"; payload: { tokenPrices: TokenPrices } };
 
 function reducer(
   state: ExchangeState,
@@ -42,16 +41,29 @@ function reducer(
 ): ExchangeState {
   switch (type) {
     case "SET_TOKEN_A_ID": {
-      return { ...state, tokenAId: payload.tokenAId, tokenPrices: "loading" };
+      return {
+        ...state,
+        tokenAId: payload.newId,
+        tokenAAmount: 0,
+        tokenBAmount: 0,
+        tokenPrices: "loading",
+      };
     }
 
     case "SET_TOKEN_B_ID": {
-      return { ...state, tokenBId: payload.tokenBId, tokenPrices: "loading" };
+      return {
+        ...state,
+        tokenBId: payload.newId,
+        tokenAAmount: 0,
+        tokenBAmount: 0,
+        tokenPrices: "loading",
+      };
     }
 
     case "SET_PRICES": {
       return { ...state, tokenPrices: payload.tokenPrices };
     }
+
     case "SET_TOKEN_A_AMOUNT": {
       if (state.tokenPrices === "loading") return state;
       const { newAmount } = payload;
@@ -75,10 +87,21 @@ function reducer(
 }
 
 type ExchangeContextValue = {
-  dispatch: Dispatch<ExchangeAction>;
   marketsData: "loading" | TokenMarketsResult[];
-  tokenA: { id: string; amount: number; price: number | "loading" };
-  tokenB: { id: string; amount: number; price: number | "loading" };
+  tokenA: {
+    id: string;
+    amount: number;
+    price: number | "loading";
+    setId: (tokenId: string) => void;
+    setAmount: (amount: number) => void;
+  };
+  tokenB: {
+    id: string;
+    amount: number;
+    price: number | "loading";
+    setId: (tokenId: string) => void;
+    setAmount: (amount: number) => void;
+  };
 };
 
 const ExchangeContext = createContext<ExchangeContextValue>(
@@ -122,19 +145,30 @@ const ExchangeProvider: React.FC<ExchangeProviderProps> = ({
   return (
     <ExchangeContext.Provider
       value={{
-        dispatch,
         marketsData: marketsData ?? "loading",
         tokenA: {
           id: state.tokenAId,
           amount: state.tokenAAmount,
           price:
             state.tokenPrices === "loading" ? "loading" : state.tokenPrices.A,
+          setId(newId) {
+            dispatch({ type: "SET_TOKEN_A_ID", payload: { newId } });
+          },
+          setAmount(newAmount) {
+            dispatch({ type: "SET_TOKEN_A_AMOUNT", payload: { newAmount } });
+          },
         },
         tokenB: {
           id: state.tokenBId,
           amount: state.tokenBAmount,
           price:
             state.tokenPrices === "loading" ? "loading" : state.tokenPrices.B,
+          setId(newId) {
+            dispatch({ type: "SET_TOKEN_B_ID", payload: { newId } });
+          },
+          setAmount(newAmount) {
+            dispatch({ type: "SET_TOKEN_B_AMOUNT", payload: { newAmount } });
+          },
         },
       }}
     >

@@ -20,17 +20,7 @@ export default function ExchangeScreen() {
 }
 
 const ExchangeUi = () => {
-  const { dispatch, tokenA, tokenB } = useExchangeContext();
-
-  const setTokenA = (tokenAId: string) =>
-    dispatch({ type: "SET_TOKEN_A_ID", payload: { tokenAId } });
-  const setTokenAAmount = (newAmount: number) =>
-    dispatch({ type: "SET_TOKEN_A_AMOUNT", payload: { newAmount } });
-
-  const setTokenB = (tokenBId: string) =>
-    dispatch({ type: "SET_TOKEN_B_ID", payload: { tokenBId } });
-  const setTokenBAmount = (newAmount: number) =>
-    dispatch({ type: "SET_TOKEN_B_AMOUNT", payload: { newAmount } });
+  const { tokenA, tokenB, marketsData } = useExchangeContext();
 
   return (
     <Container>
@@ -38,16 +28,18 @@ const ExchangeUi = () => {
         selectedToken={tokenA.id}
         amount={tokenA.amount}
         price={tokenA.price}
-        setSelectedToken={setTokenA}
-        setAmount={setTokenAAmount}
+        setSelectedToken={tokenA.setId}
+        setAmount={tokenA.setAmount}
+        options={marketsData}
       />
 
       <TokenSelect
         selectedToken={tokenB.id}
         amount={tokenB.amount}
         price={tokenB.price}
-        setSelectedToken={setTokenB}
-        setAmount={setTokenBAmount}
+        setSelectedToken={tokenB.setId}
+        setAmount={tokenB.setAmount}
+        options={marketsData}
       />
     </Container>
   );
