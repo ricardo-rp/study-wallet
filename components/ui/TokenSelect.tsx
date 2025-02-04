@@ -60,8 +60,11 @@ const TokenSelect = ({
 
           <AmountInput
             keyboardType="numeric"
-            value={amount}
-            onChangeText={setAmount}
+            value={String(amount)}
+            onChangeText={(text: string) => {
+              const parsed = parseFloat(text);
+              setAmount(isNaN(parsed) ? 0 : parsed);
+            }}
             placeholder="Amount"
           />
         </InputsWrapper>
