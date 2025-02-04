@@ -5,7 +5,7 @@ import { formatCurrency } from "@/utils";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 
 import styled from "styled-components/native";
-import { DmSans } from "@/constants/Fonts";
+import { DmSans, Quicksand } from "@/constants/Fonts";
 
 export { TokenSelect };
 
@@ -75,6 +75,7 @@ const TokenSelect = ({
 
 const PriceText = styled.Text`
   color: rgb(184, 184, 184);
+  font-family: ${Quicksand.regular};
 `;
 
 const SelectWrapper = styled.View`
@@ -116,6 +117,7 @@ const AmountInput = styled.TextInput`
   border-radius: 4px;
   color: ${Colors.darkGrey};
   padding: 4px;
+  font-family: ${Quicksand.regular};
 `;
 
 const TokenIcon = styled.Image`

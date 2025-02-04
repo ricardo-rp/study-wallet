@@ -11,6 +11,9 @@ importers:
       '@expo-google-fonts/dm-sans':
         specifier: ^0.2.3
         version: 0.2.3
+      '@expo-google-fonts/quicksand':
+        specifier: ^0.2.3
+        version: 0.2.3
       '@expo/vector-icons':
         specifier: ^14.0.2
         version: 14.0.4
@@ -876,6 +879,9 @@ packages:
 
   '@expo-google-fonts/dm-sans@0.2.3':
     resolution: {integrity: sha512-sMrW6bc3ZWg5tyasDe6GB56N1/q/wY5zjMFp1vnA61MUX19mVd62ZiiubDaroSsQIhKEJvRW662NjDGUkqmEmg==}
+
+  '@expo-google-fonts/quicksand@0.2.3':
+    resolution: {integrity: sha512-cQhYsOYPBbKzqry0TT87fJz8ZlCKLLeHiECsjI9zRx4pMB3XKnHSWNO7JBDvMA6w9ekcQ17aaBZ4vj9RC2Kgtw==}
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
@@ -5646,6 +5652,8 @@ snapshots:
   '@emotion/unitless@0.8.1': {}
 
   '@expo-google-fonts/dm-sans@0.2.3': {}
+
+  '@expo-google-fonts/quicksand@0.2.3': {}
 
   '@expo/bunyan@4.0.1':
     dependencies:

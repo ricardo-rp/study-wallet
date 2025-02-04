@@ -1,10 +1,11 @@
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 import {
-  useFonts,
   DMSans_400Regular,
   DMSans_500Medium,
   DMSans_700Bold,
 } from "@expo-google-fonts/dm-sans";
+import { Quicksand_400Regular } from "@expo-google-fonts/quicksand";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -26,6 +27,7 @@ export default function RootLayout() {
     DMSans_400Regular,
     DMSans_500Medium,
     DMSans_700Bold,
+    Quicksand_400Regular,
   });
 
   useEffect(() => {

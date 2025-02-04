@@ -7,6 +7,7 @@ import { useTokenMarkets } from "@/hooks/useTokenMarkets";
 import { FavoritesList } from "@/components/home/FavoritesList";
 import { SearchResults } from "@/components/home/SearchResults";
 import { useDebounceValue } from "usehooks-ts";
+import { Quicksand } from "@/constants/Fonts";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useDebounceValue("", 250);
@@ -43,6 +44,8 @@ const SearchInput = styled.TextInput`
   border-radius: 999px;
   background: ${Colors.lightGrey};
   border: solid rgba(41, 45, 50, 0.1);
+  font-family: ${Quicksand.regular};
+  color: ${Colors.darkBlue};
 `;
 
 const Container = styled.View`
