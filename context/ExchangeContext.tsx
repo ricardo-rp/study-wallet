@@ -134,10 +134,21 @@ const ExchangeProvider: React.FC<ExchangeProviderProps> = ({
   });
   const { tokenAId, tokenBId } = state;
 
+  // Fetch prices on token ID change
   useEffect(() => {
     fetchPrices(tokenAId, tokenBId).then((tokenPrices) => {
       dispatch({ type: "SET_PRICES", payload: { tokenPrices } });
     });
+  }, [tokenAId, tokenBId]);
+
+  // Refetch prices every 60 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchPrices(tokenAId, tokenBId).then((tokenPrices) => {
+        dispatch({ type: "SET_PRICES", payload: { tokenPrices } });
+      });
+    }, 60_000);
+    return () => clearInterval(intervalId);
   }, [tokenAId, tokenBId]);
 
   const { data: marketsData } = useTokenMarkets();
