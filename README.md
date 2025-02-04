@@ -12,7 +12,6 @@ React-query was used to facilitate data-fetching in most pages.
 
 Reducer pattern was used isntead of react query inside the `exchange` context for easier management of multiple synchronous state updates and complex behaviour.
 
-
 ## Running the project
 
 1. Install dependencies
@@ -21,7 +20,13 @@ Reducer pattern was used isntead of react query inside the `exchange` context fo
    pnpm install
    ```
 
-2. Start the app
+2. Make sure you've defined the coingecko api key in your `.env.local` file
+
+  ```
+  EXPO_PUBLIC_X_CG_DEMO_API_KEY="yourKey"
+  ```
+
+3. Start the app
 
    ```bash
     npx expo start
