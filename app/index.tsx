@@ -8,6 +8,7 @@ import { FavoritesList } from "@/components/home/FavoritesList";
 import { SearchResults } from "@/components/home/SearchResults";
 import { useDebounceValue } from "usehooks-ts";
 import { Quicksand } from "@/constants/Fonts";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useDebounceValue("", 250);
@@ -48,7 +49,7 @@ const SearchInput = styled.TextInput`
   color: ${Colors.darkBlue};
 `;
 
-const Container = styled.View`
+const Container = styled(SafeAreaView)`
   flex: 1;
   background: ${Colors.white};
 `;
