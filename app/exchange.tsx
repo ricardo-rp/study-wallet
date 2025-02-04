@@ -8,6 +8,7 @@ import {
   ExchangeProvider,
   useExchangeContext,
 } from "@/context/ExchangeContext";
+import { Span } from "@/components/ui/Typography";
 
 export default function ExchangeScreen() {
   const { tokenId } = useLocalSearchParams<{ tokenId?: string }>();
@@ -21,6 +22,17 @@ export default function ExchangeScreen() {
 
 const ExchangeUi = () => {
   const { tokenA, tokenB, marketsData } = useExchangeContext();
+
+  if (
+    tokenA.price === "error" ||
+    tokenB.price === "error" ||
+    marketsData === "error"
+  )
+    return (
+      <Span>
+        Something went wrong fetching exchange data. Please try again.
+      </Span>
+    );
 
   return (
     <Container>

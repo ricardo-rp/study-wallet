@@ -11,7 +11,7 @@ import React, {
 
 export { ExchangeProvider, useExchangeContext };
 
-type TokenPrices = "loading" | { A: number; B: number };
+type TokenPrices = "error" | "loading" | { A: number; B: number };
 type ExchangeState = {
   tokenAId: string;
   tokenBId: string;
@@ -65,7 +65,8 @@ function reducer(
     }
 
     case "SET_TOKEN_A_AMOUNT": {
-      if (state.tokenPrices === "loading") return state;
+      if (state.tokenPrices === "loading" || state.tokenPrices === "error")
+        return state;
       const { newAmount } = payload;
       const { A, B } = state.tokenPrices;
       const tokenBAmount = (newAmount * A) / B;
@@ -73,7 +74,8 @@ function reducer(
     }
 
     case "SET_TOKEN_B_AMOUNT": {
-      if (state.tokenPrices === "loading") return state;
+      if (state.tokenPrices === "loading" || state.tokenPrices === "error")
+        return state;
       const { newAmount } = payload;
       const { A, B } = state.tokenPrices;
       const tokenAAmount = (newAmount * B) / A;
@@ -87,18 +89,18 @@ function reducer(
 }
 
 type ExchangeContextValue = {
-  marketsData: "loading" | TokenMarketsResult[];
+  marketsData: "loading" | "error" | TokenMarketsResult[];
   tokenA: {
     id: string;
     amount: number;
-    price: number | "loading";
+    price: "loading" | "error" | number;
     setId: (tokenId: string) => void;
     setAmount: (amount: number) => void;
   };
   tokenB: {
     id: string;
     amount: number;
-    price: number | "loading";
+    price: "loading" | "error" | number;
     setId: (tokenId: string) => void;
     setAmount: (amount: number) => void;
   };
@@ -108,18 +110,20 @@ const ExchangeContext = createContext<ExchangeContextValue>(
   {} as ExchangeContextValue,
 );
 
-/**
- * fetchPrices is a pure function that receives a tokenAId and tokenBId,
- * fetches their USD prices and returns a Promise of type TokenPrices.
- */
 async function fetchPrices(tokenAId: string, tokenBId: string) {
-  const route = `/simple/price?ids=${tokenAId}%2C${tokenBId}&vs_currencies=usd`;
-  const data = await fetchFromCoinGecko<Record<string, { usd: number }>>(route);
+  try {
+    const route = `/simple/price?ids=${tokenAId}%2C${tokenBId}&vs_currencies=usd`;
+    const data =
+      await fetchFromCoinGecko<Record<string, { usd: number }>>(route);
 
-  const tokenAPrice = data[tokenAId].usd;
-  const tokenBPrice = data[tokenBId].usd;
+    const tokenAPrice = data[tokenAId].usd;
+    const tokenBPrice = data[tokenBId].usd;
 
-  return { A: tokenAPrice, B: tokenBPrice };
+    return { A: tokenAPrice, B: tokenBPrice };
+  } catch (e) {
+    console.error(e);
+    return "error" as const;
+  }
 }
 
 type ExchangeProviderProps = { children: ReactNode; defaultTokenAId: string };
@@ -128,11 +132,10 @@ const ExchangeProvider: React.FC<ExchangeProviderProps> = ({
   children,
   defaultTokenAId,
 }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    tokenAId: defaultTokenAId,
-  });
-  const { tokenAId, tokenBId } = state;
+  const [
+    { tokenAId, tokenAAmount, tokenBId, tokenBAmount, tokenPrices },
+    dispatch,
+  ] = useReducer(reducer, { ...initialState, tokenAId: defaultTokenAId });
 
   // Fetch prices on token ID change
   useEffect(() => {
@@ -151,17 +154,24 @@ const ExchangeProvider: React.FC<ExchangeProviderProps> = ({
     return () => clearInterval(intervalId);
   }, [tokenAId, tokenBId]);
 
-  const { data: marketsData } = useTokenMarkets();
+  const { data: marketsData, error: marketsDataError } = useTokenMarkets();
 
   return (
     <ExchangeContext.Provider
       value={{
-        marketsData: marketsData ?? "loading",
+        marketsData: (() => {
+          if (marketsData) return marketsData;
+          if (marketsDataError) return "error";
+          return "loading";
+        })(),
         tokenA: {
-          id: state.tokenAId,
-          amount: state.tokenAAmount,
-          price:
-            state.tokenPrices === "loading" ? "loading" : state.tokenPrices.A,
+          id: tokenAId,
+          amount: tokenAAmount,
+          price: (() => {
+            if (tokenPrices === "error" || tokenPrices === "loading")
+              return tokenPrices;
+            else return tokenPrices.A;
+          })(),
           setId(newId) {
             dispatch({ type: "SET_TOKEN_A_ID", payload: { newId } });
           },
@@ -170,10 +180,13 @@ const ExchangeProvider: React.FC<ExchangeProviderProps> = ({
           },
         },
         tokenB: {
-          id: state.tokenBId,
-          amount: state.tokenBAmount,
-          price:
-            state.tokenPrices === "loading" ? "loading" : state.tokenPrices.B,
+          id: tokenBId,
+          amount: tokenBAmount,
+          price: (() => {
+            if (tokenPrices === "error" || tokenPrices === "loading")
+              return tokenPrices;
+            else return tokenPrices.B;
+          })(),
           setId(newId) {
             dispatch({ type: "SET_TOKEN_B_ID", payload: { newId } });
           },
