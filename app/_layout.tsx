@@ -45,6 +45,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShown: true,
+              headerBackButtonDisplayMode: "minimal",
             }}
           >
             <Stack.Screen
