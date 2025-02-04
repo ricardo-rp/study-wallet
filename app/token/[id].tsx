@@ -8,6 +8,7 @@ import { useFavoriteIds } from "@/hooks/useFavoriteIds";
 import { useLayoutEffect } from "react";
 import { Gutter } from "@/constants/Layout";
 import { HeartIcon } from "react-native-heroicons/outline";
+import { DmSans } from "@/constants/Fonts";
 
 type TokenDetails = {
   id: string;
@@ -69,27 +70,27 @@ export default function TokenDetailsScreen() {
       <Section>
         <SectionTitle>{symbol} historical price</SectionTitle>
 
-        <PriceRow darken>
+        <InfoRow darken>
           <Label>Market Cap</Label>
           <Text>{formatCurrency(market_cap.usd)}</Text>
-        </PriceRow>
+        </InfoRow>
 
-        <PriceRow>
+        <InfoRow>
           <Label>24h Range</Label>
           <Text>
             {formatCurrency(low_24h.usd)} - {formatCurrency(high_24h.usd)}
           </Text>
-        </PriceRow>
+        </InfoRow>
 
-        <PriceRow darken>
+        <InfoRow darken>
           <Label>All-Time High</Label>
           <Text>{formatCurrency(ath.usd)}</Text>
-        </PriceRow>
+        </InfoRow>
 
-        <PriceRow>
+        <InfoRow>
           <Label>All-Time Low</Label>
           <Text>{formatCurrency(atl.usd)}</Text>
-        </PriceRow>
+        </InfoRow>
       </Section>
     </Container>
   );
@@ -106,7 +107,7 @@ const Header = styled.View`
   align-items: center;
   margin-bottom: 38px;
   background: ${Colors.red};
-  border-radius: 0 0 36px 36px;
+  border-radius: 0 0 40px 40px;
   padding: 0 0 20px;
 `;
 
@@ -119,7 +120,7 @@ const TokenImage = styled(Image)`
 const HeaderText = styled.Text`
   color: ${Colors.white};
   font-size: 24px;
-  font-weight: 700;
+  font-family: ${DmSans.bold};
   line-height: 34px;
 `;
 
@@ -127,27 +128,29 @@ const Section = styled.View``;
 
 const SectionTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
+  font-family: ${DmSans.bold};
   margin-bottom: 12px;
-  padding-horizontal: ${Gutter + 9}px;
+  padding-horizontal: ${Gutter + 4}px;
 `;
 
-const PriceRow = styled.View`
+const InfoRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding-vertical: 24px;
   padding-horizontal: ${Gutter}px;
   background-color: ${({ darken }: { darken: boolean }) =>
     darken ? Colors.lightGrey : Colors.white};
+  font-family: ${DmSans.medium};
 `;
 
 const Label = styled.Text`
   font-size: 16px;
+  font-family: ${DmSans.medium};
 `;
 
 const Text = styled.Text`
   font-size: 16px;
-  font-weight: 500;
+  font-family: ${DmSans.medium};
 `;
 
 const ErrorText = styled.Text`
