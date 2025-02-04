@@ -5,6 +5,7 @@ import { formatCurrency } from "@/utils";
 import { TokenMarketsResult } from "@/hooks/useTokenMarkets";
 
 import styled from "styled-components/native";
+import { DmSans } from "@/constants/Fonts";
 
 export { TokenSelect };
 
@@ -103,7 +104,7 @@ const StyledPicker = styled(Picker)`
   border-radius: 4px;
   background-color: transparent;
   border: none;
-  font-weight: bold;
+  font-family: ${DmSans.bold};
   font-size: 14px;
   line-height: 24px;
   padding: 0 4px;
