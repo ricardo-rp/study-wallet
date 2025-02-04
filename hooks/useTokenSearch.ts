@@ -1,5 +1,4 @@
 import { useCoinGeckoApi } from "@/hooks/useCoinGeckoApi";
-import { useDeferredValue } from "react";
 import { TokenMarketsResult } from "./useTokenMarkets";
 
 type TokenSearchResult = {
