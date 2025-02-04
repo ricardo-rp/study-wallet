@@ -31,8 +31,8 @@ const Pressable = styled.Pressable`
   border-radius: 16px;
   width: 58px;
   height: 58px;
-  place-items: center;
-  display: grid;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   bottom: 52px;
   right: 28px;
